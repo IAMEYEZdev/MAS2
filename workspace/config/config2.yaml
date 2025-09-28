@@ -1,0 +1,61 @@
+
+
+models:
+ "gpt-4o-mini": # put your model name here
+   api_type: "openai"
+   base_url: "https://openrouter.ai/api/v1"
+   api_key: "<API_KEY>"
+   temperature: 0
+   stream: false
+   timeout: 600
+   max_tokens: 2048
+ "gpt-4o": 
+   api_type: "openai"
+   base_url: "https://openrouter.ai/api/v1"
+   api_key: "<API_KEY>"
+   temperature: 0
+   stream: false
+   timeout: 600
+   max_tokens: 2048
+ "qwen/qwen-2.5-72b-instruct": 
+   api_type: "openai"
+   base_url: "https://openrouter.ai/api/v1"
+   api_key: "<API_KEY>"
+   temperature: 0
+   stream: false
+   timeout: 600
+   max_tokens: 2048
+ "qwen/qwen3-32b": 
+   api_type: "openai"
+   base_url: "https://openrouter.ai/api/v1"
+   api_key: "<API_KEY>"
+   temperature: 0
+   stream: false
+   timeout: 600
+   max_tokens: 2048
+ "qwen/qwen3-14b": 
+   api_type: "openai"
+   base_url: "https://openrouter.ai/api/v1"
+   api_key: "<API_KEY>"
+   temperature: 0
+   stream: false
+   timeout: 600
+   max_tokens: 2048
+ "qwen/qwq-32b": 
+   api_type: "openai"
+   base_url: "https://openrouter.ai/api/v1"
+   api_key: "<API_KEY>"
+   temperature: 0  
+   stream: false
+   timeout: 600
+   max_tokens: 2048
+CALC_USAGE: True
+
+llm:
+   api_type: "openai"
+   base_url: "https://openrouter.ai/api/v1"
+   api_key: "<API_KEY>"
+   model: "gpt-4o-mini"
+   stream: false
+   timeout: 180
+   max_tokens: 1024

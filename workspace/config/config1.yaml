@@ -1,0 +1,17 @@
+dataset: MATH
+
+CUDA_VISIBLE_DEVICES: "0"
+
+executor:
+  model: gpt-4o-mini
+  temperature: 0.0
+
+generator:
+  model: qwen/qwen3-8b
+  temperature: 0.3
+
+rectifier:
+  model: qwen/qwen3-8b
+  temperature: 0.3
+  
+

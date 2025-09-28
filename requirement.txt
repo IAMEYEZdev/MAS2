@@ -1,0 +1,39 @@
+# MAS² Project Core Dependencies
+
+# --- Local Framework ---
+# Install the local metagpt package in editable mode
+-e ./metagpt_local
+
+# --- Core AI/ML Frameworks ---
+torch
+transformers
+vllm
+peft
+trl
+accelerate
+bitsandbytes
+einops
+safetensors
+xformers
+datasets
+
+# --- Data Science & Vector Stores ---
+numpy
+pandas
+scikit-learn
+faiss-cpu
+qdrant-client
+lancedb
+
+# --- LLM Provider SDKs ---
+openai
+anthropic
+google-generativeai
+zhipuai
+qianfan
+
+# --- Common Utilities ---
+PyYAML
+python-dotenv
+tqdm
+loguru
