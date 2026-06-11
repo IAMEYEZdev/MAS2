@@ -24,7 +24,7 @@
     --paper:#f4ead5;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
-  html{scroll-behavior:auto;}
+  html{scroll-behavior:smooth;}
   body{
     background:var(--jungle-deep);
     color:var(--paper);
@@ -58,39 +58,88 @@
 
   #fx-canvas{position:fixed;inset:0;z-index:52;pointer-events:none;}
 
-  /* corner vines that grow with overall scroll */
   .corner-vine{position:fixed;z-index:53;pointer-events:none;width:min(34vw,420px);height:min(34vw,420px);}
   .corner-vine.tl{top:-10px;left:-10px;}
   .corner-vine.tr{top:-10px;right:-10px;transform:scaleX(-1);}
   .corner-vine.bl{bottom:-10px;left:-10px;transform:scaleY(-1);}
   .corner-vine.br{bottom:-10px;right:-10px;transform:scale(-1,-1);}
 
-  /* progress nectar bar */
   .nectar{
     position:fixed;top:0;left:0;height:4px;width:100%;z-index:70;transform-origin:left;
     background:linear-gradient(90deg,var(--lime),var(--mango),var(--beet),var(--dragon));
     transform:scaleX(0);
   }
 
+  /* ---------- generated cinematic backdrops ---------- */
+  .scene-bg{position:absolute;inset:-12% 0;z-index:0;overflow:hidden;}
+  .scene-bg img{width:100%;height:100%;object-fit:cover;display:block;}
+  .scene-bg .tint{position:absolute;inset:0;}
+  .scene-bg.dead{display:none;}
+
+  /* ---------- nav ---------- */
+  .topbar{
+    position:fixed;top:0;left:0;width:100%;z-index:80;text-align:center;
+    background:linear-gradient(90deg,var(--jungle-mid),#0c2a18);
+    color:var(--lime);font-size:.68rem;letter-spacing:.28em;text-transform:uppercase;
+    padding:.45rem 1rem;transition:transform .5s ease;
+  }
+  body.scrolled .topbar{transform:translateY(-100%);}
+  nav.mainnav{
+    position:fixed;top:0;left:0;width:100%;z-index:79;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:1rem clamp(1rem,4vw,3rem);margin-top:1.7rem;
+    transform:translateY(-130%);transition:transform .6s cubic-bezier(.7,0,.3,1),margin .5s ease;
+  }
+  body.scrolled nav.mainnav{transform:translateY(0);margin-top:0;
+    background:rgba(6,19,12,.72);backdrop-filter:blur(14px);
+    border-bottom:1px solid rgba(184,245,61,.12);}
+  nav.mainnav.boot{transform:translateY(0);}
+  .navlogo{font-family:'Cinzel',serif;font-weight:900;font-size:1.05rem;letter-spacing:.12em;
+    color:var(--paper);text-decoration:none;white-space:nowrap;}
+  .navlogo span{color:var(--lime);}
+  .navlinks{display:flex;gap:clamp(.8rem,2.4vw,2.2rem);align-items:center;}
+  .navlinks a{
+    color:#cfe7d6;text-decoration:none;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;
+    transition:color .3s;
+  }
+  .navlinks a:hover{color:var(--lime);}
+  .cartbtn{
+    position:relative;display:inline-flex;align-items:center;gap:.45rem;
+    border:1px solid rgba(184,245,61,.4);border-radius:999px;padding:.45rem 1rem;
+    color:var(--lime);font-size:.72rem;letter-spacing:.18em;cursor:pointer;background:none;
+    font-family:'Outfit';text-transform:uppercase;transition:background .3s,color .3s;
+  }
+  .cartbtn:hover{background:rgba(184,245,61,.12);}
+  .cartbtn .count{
+    background:var(--lime);color:var(--jungle-deep);border-radius:999px;
+    min-width:1.3em;padding:.1em .35em;font-weight:800;text-align:center;
+  }
+  @media(max-width:760px){.navlinks a:not(.keep){display:none;}}
+
   /* ---------- shared layout ---------- */
   section{position:relative;min-height:100vh;overflow:hidden;}
+  section.auto{min-height:0;}
   .scene-inner{position:relative;height:100vh;width:100%;display:flex;align-items:center;justify-content:center;}
   h1,h2,h3{font-family:'Cinzel',serif;font-weight:900;line-height:1.02;}
   .kicker{
     letter-spacing:.55em;text-transform:uppercase;font-size:clamp(.6rem,1.4vw,.85rem);
     color:var(--lime);font-weight:600;
   }
+  .section-head{text-align:center;padding:11vh 6vw 5vh;position:relative;z-index:3;}
+  .section-head h2{font-size:clamp(1.9rem,5vw,3.6rem);margin-top:.4em;}
 
   /* ---------- HERO ---------- */
   #hero{background:
     radial-gradient(120% 90% at 50% 110%, #123620 0%, transparent 60%),
     linear-gradient(180deg,#020805 0%,var(--jungle-deep) 50%,var(--jungle-dark) 100%);
   }
+  #hero .scene-bg .tint{background:
+    linear-gradient(180deg,rgba(2,8,5,.78) 0%,rgba(6,19,12,.30) 40%,rgba(6,19,12,.88) 100%);}
   .shaft{
     position:absolute;top:-20%;width:18vw;height:150%;
     background:linear-gradient(180deg,rgba(255,236,170,.28),rgba(255,236,170,0) 70%);
     filter:blur(18px);transform:skewX(-14deg);mix-blend-mode:screen;
-    animation:sway 9s ease-in-out infinite alternate;
+    animation:sway 9s ease-in-out infinite alternate;z-index:1;
   }
   .shaft.s1{left:12%;}
   .shaft.s2{left:38%;width:10vw;animation-delay:-3s;opacity:.7;}
@@ -99,7 +148,7 @@
   .mist{
     position:absolute;width:70vw;height:38vh;border-radius:50%;
     background:radial-gradient(ellipse,rgba(159,216,180,.16),transparent 70%);
-    filter:blur(30px);mix-blend-mode:screen;
+    filter:blur(30px);mix-blend-mode:screen;z-index:1;
   }
   .mist.m1{bottom:-8vh;left:-12vw;animation:drift 26s linear infinite alternate;}
   .mist.m2{bottom:6vh;right:-20vw;animation:drift 34s linear infinite alternate-reverse;}
@@ -131,11 +180,14 @@
 
   /* ---------- POUR SCENE ---------- */
   #pour{background:linear-gradient(180deg,var(--jungle-dark),#1a0f24 120%);}
+  #pour .scene-bg{opacity:0;}
+  #pour .scene-bg .tint{background:
+    radial-gradient(70% 60% at 50% 50%,rgba(10,31,18,.20) 0%,rgba(10,31,18,.86) 100%);}
   .pour-bg{
-    position:absolute;inset:0;opacity:0;
+    position:absolute;inset:0;opacity:0;z-index:1;
     background:radial-gradient(80% 70% at 50% 45%,rgba(255,172,51,.30),rgba(233,47,140,.12) 55%,transparent 80%);
   }
-  .pour-stage{position:relative;width:min(92vw,900px);height:84vh;display:flex;align-items:center;justify-content:center;}
+  .pour-stage{position:relative;width:min(92vw,900px);height:84vh;display:flex;align-items:center;justify-content:center;z-index:2;}
   .bottle-3d{width:clamp(150px,24vh,250px);transform-style:preserve-3d;perspective:900px;z-index:4;}
   .bottle-3d svg{width:100%;height:auto;display:block;filter:drop-shadow(0 30px 50px rgba(0,0,0,.6));}
   #gush-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;z-index:3;}
@@ -150,6 +202,39 @@
   }
   .pour-words h2 .ch{display:inline-block;}
   .pour-words p{margin-top:1rem;color:#e8d9c2;font-weight:300;letter-spacing:.2em;text-transform:uppercase;font-size:clamp(.6rem,1.6vw,.9rem);}
+
+  /* ---------- SHOP GRID ---------- */
+  #shop{background:linear-gradient(180deg,#1a0f24 -20%,var(--jungle-deep) 25%);}
+  .shop-grid{
+    position:relative;z-index:3;display:grid;gap:clamp(1rem,2.5vw,2rem);
+    grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));
+    padding:0 clamp(1rem,6vw,6rem) 12vh;max-width:1300px;margin:0 auto;
+  }
+  .sku{
+    position:relative;border-radius:20px;padding:1.6rem 1.4rem 1.5rem;overflow:hidden;
+    background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);
+    display:flex;flex-direction:column;align-items:center;text-align:center;gap:.55rem;
+    transition:transform .45s cubic-bezier(.2,.8,.2,1),border-color .45s,box-shadow .45s;
+  }
+  .sku:hover{transform:translateY(-10px);border-color:rgba(184,245,61,.45);
+    box-shadow:0 30px 60px rgba(0,0,0,.5);}
+  .sku .glowbed{position:absolute;inset:0;opacity:.16;transition:opacity .45s;}
+  .sku:hover .glowbed{opacity:.34;}
+  .sku .sku-bottle{width:clamp(64px,8vw,92px);perspective:600px;position:relative;z-index:1;}
+  .sku .sku-bottle svg{width:100%;height:auto;filter:drop-shadow(0 16px 22px rgba(0,0,0,.55));}
+  .sku h3{font-size:1.15rem;letter-spacing:.05em;position:relative;z-index:1;}
+  .sku .ing{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:#bcd9bf;font-weight:300;position:relative;z-index:1;}
+  .sku .price{font-weight:800;font-size:1.05rem;color:var(--pineapple);position:relative;z-index:1;}
+  .addbtn{
+    position:relative;z-index:1;margin-top:.35rem;cursor:pointer;border:none;border-radius:999px;
+    padding:.62rem 1.5rem;font-family:'Outfit';font-weight:800;font-size:.7rem;
+    letter-spacing:.18em;text-transform:uppercase;color:var(--jungle-deep);
+    background:linear-gradient(90deg,var(--lime),var(--pineapple));
+    transition:transform .25s,filter .25s;
+  }
+  .addbtn:hover{transform:scale(1.06);}
+  .addbtn.added{background:var(--emerald);color:#04130a;filter:none;}
+  .burst-drop{position:fixed;z-index:90;border-radius:50% 50% 60% 60%;pointer-events:none;}
 
   /* ---------- FLAVOR WORLDS (horizontal) ---------- */
   #flavors{background:var(--jungle-deep);}
@@ -170,33 +255,140 @@
     backdrop-filter:blur(6px);
     box-shadow:0 40px 80px rgba(0,0,0,.45);
   }
-  .flavor-card .splash{position:absolute;top:-12%;left:-12%;width:124%;height:124%;z-index:0;opacity:.9;}
-  .flavor-card .card-vine{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;}
+  .flavor-card .card-bg{position:absolute;inset:0;z-index:0;}
+  .flavor-card .card-bg img{width:100%;height:100%;object-fit:cover;display:block;}
+  .flavor-card .card-bg .tint{position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(6,19,12,.16) 30%,rgba(6,19,12,.88) 92%);}
+  .flavor-card .card-bg.dead{display:none;}
+  .flavor-card .splash{position:absolute;top:-12%;left:-12%;width:124%;height:124%;z-index:1;opacity:.85;}
+  .flavor-card .card-vine{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none;}
   .flavor-card .bottle-wrap{
     position:absolute;top:6%;left:50%;transform:translateX(-50%);
-    width:36%;z-index:1;perspective:700px;
+    width:36%;z-index:2;perspective:700px;
   }
   .flavor-card .bottle-wrap svg{width:100%;height:auto;filter:drop-shadow(0 24px 36px rgba(0,0,0,.55));}
-  .flavor-card .meta{position:relative;z-index:3;text-align:center;}
+  .flavor-card .meta{position:relative;z-index:4;text-align:center;}
   .flavor-card .meta h3{font-size:clamp(1.5rem,4vw,2.3rem);letter-spacing:.04em;}
   .flavor-card .meta .ing{
     margin:.7rem 0 .9rem;font-weight:300;color:#e9f3ea;font-size:clamp(.8rem,1.7vw,.95rem);
     letter-spacing:.12em;text-transform:uppercase;
   }
-  .flavor-card .meta .note{font-style:italic;color:#c9dcc9;font-size:clamp(.8rem,1.7vw,.95rem);font-weight:300;}
+  .flavor-card .meta .note{font-style:italic;color:#d8e8d4;font-size:clamp(.8rem,1.7vw,.95rem);font-weight:300;}
+
+  /* ---------- WHY / BENEFITS ---------- */
+  #why{background:linear-gradient(180deg,var(--jungle-deep),#0b2415);}
+  .why-grid{
+    position:relative;z-index:3;display:grid;gap:2.5rem;max-width:1100px;margin:0 auto;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    padding:0 clamp(1.5rem,6vw,4rem) 13vh;text-align:center;
+  }
+  .stat .num{
+    font-family:'Cinzel',serif;font-weight:900;font-size:clamp(2.6rem,6vw,4.2rem);
+    color:var(--lime);line-height:1;
+  }
+  .stat .num .unit{font-size:.45em;color:var(--mango);}
+  .stat .lbl{margin-top:.6rem;font-size:.72rem;letter-spacing:.24em;text-transform:uppercase;color:#bcd9bf;}
+  .stat p{margin-top:.7rem;font-weight:300;font-size:.88rem;color:#9dbfa3;}
+
+  /* ---------- CLEANSES ---------- */
+  #cleanses{background:linear-gradient(180deg,#0b2415,var(--jungle-deep));}
+  .tiers{
+    position:relative;z-index:3;display:grid;gap:clamp(1.2rem,2.5vw,2rem);
+    grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));
+    max-width:1100px;margin:0 auto;padding:0 clamp(1.5rem,6vw,4rem) 13vh;
+  }
+  .tier{
+    position:relative;border-radius:24px;padding:2.4rem 1.9rem;overflow:hidden;
+    background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.10);
+    display:flex;flex-direction:column;gap:1rem;
+    transition:transform .45s cubic-bezier(.2,.8,.2,1),border-color .45s;
+  }
+  .tier:hover{transform:translateY(-8px);}
+  .tier.featured{border-color:var(--pineapple);background:rgba(255,210,63,.07);}
+  .tier .badge{
+    position:absolute;top:1.1rem;right:-2.6rem;transform:rotate(38deg);
+    background:var(--pineapple);color:var(--jungle-deep);font-weight:800;
+    font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;padding:.35rem 3rem;
+  }
+  .tier h3{font-size:1.45rem;}
+  .tier .days{color:var(--lime);font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;}
+  .tier .tprice{font-family:'Cinzel',serif;font-weight:900;font-size:2.6rem;color:var(--paper);}
+  .tier .tprice small{font-size:.85rem;color:#9dbfa3;font-family:'Outfit';font-weight:300;}
+  .tier ul{list-style:none;display:flex;flex-direction:column;gap:.55rem;font-weight:300;font-size:.9rem;color:#cfe3cf;}
+  .tier ul li::before{content:'🌿 ';}
+  .tier .cta{margin-top:auto;text-align:center;}
+
+  /* ---------- STORY ---------- */
+  #story{background:var(--jungle-deep);}
+  .story-wrap{
+    position:relative;z-index:3;display:grid;gap:clamp(2rem,5vw,4.5rem);
+    grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));
+    max-width:1150px;margin:0 auto;padding:0 clamp(1.5rem,6vw,4rem) 13vh;align-items:center;
+  }
+  .story-frame{
+    position:relative;border-radius:26px;overflow:hidden;aspect-ratio:4/4.6;
+    border:1px solid rgba(255,255,255,.14);box-shadow:0 40px 90px rgba(0,0,0,.55);
+  }
+  .story-frame img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.12);}
+  .story-frame .tint{position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(6,19,12,.75));}
+  .story-frame .story-vine{position:absolute;inset:0;width:100%;height:100%;z-index:2;}
+  .story-copy .kicker{display:block;margin-bottom:1rem;}
+  .story-copy h2{font-size:clamp(1.9rem,4.5vw,3.2rem);margin-bottom:1.4rem;}
+  .story-copy p{font-weight:300;color:#c9dec9;line-height:1.75;margin-bottom:1.1rem;font-size:clamp(.92rem,1.8vw,1.02rem);}
+  .story-copy .sig{font-family:'Cinzel',serif;color:var(--pineapple);letter-spacing:.12em;margin-top:1.6rem;}
+
+  /* ---------- TESTIMONIALS ---------- */
+  #voices{background:linear-gradient(180deg,var(--jungle-deep),#101f2e 160%);}
+  .quotes{
+    position:relative;z-index:3;display:grid;gap:clamp(1.2rem,2.5vw,2rem);
+    grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));
+    max-width:1150px;margin:0 auto;padding:0 clamp(1.5rem,6vw,4rem) 13vh;
+  }
+  .quote{
+    border-radius:22px;padding:2rem 1.7rem;
+    background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);
+    display:flex;flex-direction:column;gap:.9rem;
+  }
+  .quote .stars{color:var(--pineapple);letter-spacing:.25em;}
+  .quote blockquote{font-weight:300;font-style:italic;color:#dcead8;line-height:1.65;font-size:.95rem;}
+  .quote .who{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--lime);}
 
   /* ---------- OVERGROWTH ---------- */
   #overgrowth{background:linear-gradient(180deg,var(--jungle-deep),var(--jungle-mid) 140%);}
-  #overgrowth-svg{position:absolute;inset:0;width:100%;height:100%;}
+  #overgrowth .scene-bg .tint{background:rgba(6,19,12,.62);}
+  #overgrowth-svg{position:absolute;inset:0;width:100%;height:100%;z-index:1;}
   .overgrowth-words{position:relative;z-index:3;text-align:center;padding:0 6vw;}
   .overgrowth-words h2{font-size:clamp(2.2rem,7vw,5.5rem);}
   .overgrowth-words h2 .word{display:inline-block;color:transparent;background-clip:text;-webkit-background-clip:text;
     background-image:linear-gradient(180deg,#f8ffe9,var(--lime) 70%);}
   .overgrowth-words p{margin-top:1.4rem;max-width:520px;margin-inline:auto;font-weight:300;color:#d9ecd9;}
 
+  /* ---------- FIND US / NEWSLETTER ---------- */
+  #findus{background:var(--jungle-deep);}
+  .findus-wrap{
+    position:relative;z-index:3;display:grid;gap:clamp(2rem,5vw,4rem);
+    grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));
+    max-width:1100px;margin:0 auto;padding:0 clamp(1.5rem,6vw,4rem) 13vh;
+  }
+  .stockists h3,.signup h3{font-size:1.5rem;margin-bottom:1.2rem;}
+  .stockists ul{list-style:none;display:flex;flex-direction:column;gap:.85rem;}
+  .stockists li{display:flex;justify-content:space-between;gap:1rem;font-weight:300;color:#cfe3cf;
+    border-bottom:1px dashed rgba(184,245,61,.18);padding-bottom:.8rem;font-size:.92rem;}
+  .stockists li span:last-child{color:#8fb295;font-size:.78rem;letter-spacing:.08em;white-space:nowrap;}
+  .signup p{font-weight:300;color:#c9dec9;margin-bottom:1.4rem;line-height:1.7;}
+  .signup form{display:flex;gap:.6rem;flex-wrap:wrap;}
+  .signup input{
+    flex:1;min-width:200px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);
+    border-radius:999px;padding:.95rem 1.4rem;color:var(--paper);font-family:'Outfit';font-size:.9rem;outline:none;
+    transition:border-color .3s;
+  }
+  .signup input:focus{border-color:var(--lime);}
+  .signup input::placeholder{color:#7e9a83;}
+
   /* ---------- FINALE ---------- */
   #finale{background:radial-gradient(100% 80% at 50% 100%,#23501f 0%,var(--jungle-deep) 70%);}
-  .finale-inner{flex-direction:column;gap:4vh;text-align:center;padding-top:8vh;}
+  #finale .scene-bg .tint{background:linear-gradient(180deg,rgba(6,19,12,.84),rgba(6,19,12,.45) 55%,rgba(6,19,12,.9));}
+  .finale-inner{flex-direction:column;gap:4vh;text-align:center;padding-top:8vh;height:auto;min-height:88vh;}
   #crown-svg{width:min(80vw,700px);height:auto;overflow:visible;}
   .lineup{display:flex;align-items:flex-end;gap:clamp(.6rem,2.5vw,2rem);justify-content:center;}
   .lineup .li-bottle{width:clamp(44px,7vw,84px);perspective:500px;}
@@ -204,22 +396,33 @@
   .finale-inner h2{font-size:clamp(2rem,6vw,4.5rem);
     background:linear-gradient(90deg,var(--pineapple),var(--lime));-webkit-background-clip:text;background-clip:text;color:transparent;}
   .cta{
-    margin-top:1rem;display:inline-block;padding:1rem 2.6rem;border-radius:999px;
+    display:inline-block;padding:1rem 2.6rem;border-radius:999px;border:none;cursor:pointer;
     font-family:'Outfit';font-weight:800;letter-spacing:.18em;text-transform:uppercase;font-size:.8rem;
     color:var(--jungle-deep);background:linear-gradient(90deg,var(--lime),var(--pineapple));
     text-decoration:none;box-shadow:0 12px 40px rgba(184,245,61,.35);
     transition:transform .3s ease,box-shadow .3s ease;
   }
   .cta:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 18px 60px rgba(184,245,61,.5);}
-  footer{
-    position:relative;z-index:3;display:flex;flex-wrap:wrap;gap:2.4rem;justify-content:center;
-    padding:7vh 6vw 6vh;color:#a9c7ab;font-size:.75rem;letter-spacing:.3em;text-transform:uppercase;
+  .cta.ghost{background:none;border:1px solid rgba(184,245,61,.5);color:var(--lime);box-shadow:none;}
+
+  footer{position:relative;z-index:3;padding:8vh 6vw 5vh;}
+  .foot-grid{
+    display:grid;gap:2.5rem;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+    max-width:1150px;margin:0 auto;padding-bottom:4vh;border-bottom:1px solid rgba(184,245,61,.14);
   }
-  footer a{color:inherit;text-decoration:none;border-bottom:1px solid transparent;transition:color .3s,border-color .3s;}
-  footer a:hover{color:var(--lime);border-color:var(--lime);}
-  .mock-note{
-    width:100%;text-align:center;margin-top:2.5rem;letter-spacing:.12em;font-size:.62rem;color:#5e7a62;
+  .foot-grid h4{font-family:'Cinzel';font-size:.85rem;letter-spacing:.22em;color:var(--lime);margin-bottom:1.1rem;text-transform:uppercase;}
+  .foot-grid ul{list-style:none;display:flex;flex-direction:column;gap:.6rem;}
+  .foot-grid a{color:#aac9ab;text-decoration:none;font-weight:300;font-size:.88rem;transition:color .3s;}
+  .foot-grid a:hover{color:var(--paper);}
+  .foot-grid p{color:#aac9ab;font-weight:300;font-size:.88rem;line-height:1.7;}
+  .legal{
+    display:flex;flex-wrap:wrap;gap:1.5rem;justify-content:space-between;align-items:center;
+    max-width:1150px;margin:3vh auto 0;color:#5e7a62;font-size:.68rem;letter-spacing:.14em;
   }
+  .socials{display:flex;gap:1.1rem;font-size:1.05rem;}
+  .socials a{text-decoration:none;filter:grayscale(.4);transition:filter .3s,transform .3s;}
+  .socials a:hover{filter:none;transform:translateY(-2px);}
+  .mock-note{width:100%;text-align:center;margin-top:2rem;letter-spacing:.12em;font-size:.62rem;color:#50684f;}
 
   @media (prefers-reduced-motion:reduce){
     .shaft,.mist,.grain,.scroll-cue .drop{animation:none;}
@@ -240,8 +443,22 @@
 <svg class="corner-vine bl" viewBox="0 0 400 400" aria-hidden="true"></svg>
 <svg class="corner-vine br" viewBox="0 0 400 400" aria-hidden="true"></svg>
 
+<div class="topbar">🌿 Pressed this morning · Free jungle delivery over $50 · Glass bottles only</div>
+<nav class="mainnav boot" id="mainnav">
+  <a class="navlogo" href="#hero">THE JUICE <span>PANTRY</span></a>
+  <div class="navlinks">
+    <a href="#shop">Shop</a>
+    <a href="#flavors">Field Guide</a>
+    <a href="#cleanses">Cleanses</a>
+    <a href="#story">Our Story</a>
+    <a href="#findus">Find Us</a>
+    <button class="cartbtn keep" id="cartbtn">🧺 Cart <span class="count" id="cartcount">0</span></button>
+  </div>
+</nav>
+
 <!-- ============ SCENE 1 · HERO ============ -->
 <section id="hero">
+  <div class="scene-bg" data-asset="hero"><span class="tint"></span></div>
   <svg class="hero-canopy" viewBox="0 0 1440 320" preserveAspectRatio="xMidYMin slice" aria-hidden="true">
     <defs>
       <linearGradient id="leafShade" x1="0" y1="0" x2="0" y2="1">
@@ -266,6 +483,7 @@
 
 <!-- ============ SCENE 2 · THE POUR ============ -->
 <section id="pour">
+  <div class="scene-bg" data-asset="pour"><span class="tint"></span></div>
   <div class="pour-bg"></div>
   <div class="scene-inner">
     <div class="pour-stage">
@@ -279,6 +497,15 @@
   </div>
 </section>
 
+<!-- ============ SHOP ============ -->
+<section id="shop" class="auto">
+  <div class="section-head">
+    <div class="kicker">Fresh from the canopy</div>
+    <h2>Shop the Pantry</h2>
+  </div>
+  <div class="shop-grid" id="shop-grid"></div>
+</section>
+
 <!-- ============ SCENE 3 · FLAVOR WORLDS ============ -->
 <section id="flavors">
   <div class="flavors-head">
@@ -288,8 +515,102 @@
   <div class="flavor-track" id="flavor-track"></div>
 </section>
 
+<!-- ============ WHY ============ -->
+<section id="why" class="auto">
+  <div class="section-head">
+    <div class="kicker">Why cold-pressed</div>
+    <h2>Raw Numbers from the Wild</h2>
+  </div>
+  <div class="why-grid">
+    <div class="stat"><div class="num"><span data-count="2" data-dec="0">0</span><span class="unit">lbs</span></div>
+      <div class="lbl">Produce per bottle</div><p>Pressed slow under two tonnes of pressure. Nothing else gets in.</p></div>
+    <div class="stat"><div class="num"><span data-count="0" data-dec="0">9</span><span class="unit">°heat</span></div>
+      <div class="lbl">Never pasteurised</div><p>Zero heat means the enzymes arrive as alive as the jungle they left.</p></div>
+    <div class="stat"><div class="num"><span data-count="48" data-dec="0">0</span><span class="unit">hrs</span></div>
+      <div class="lbl">Press-to-porch</div><p>If it's older than two sunrises, it never leaves the pantry.</p></div>
+    <div class="stat"><div class="num"><span data-count="100" data-dec="0">0</span><span class="unit">%</span></div>
+      <div class="lbl">Glass, always</div><p>Juice this alive deserves better than plastic. Return the empties, feed the vines.</p></div>
+  </div>
+</section>
+
+<!-- ============ CLEANSES ============ -->
+<section id="cleanses" class="auto">
+  <div class="section-head">
+    <div class="kicker">Programs</div>
+    <h2>Choose Your Expedition</h2>
+  </div>
+  <div class="tiers">
+    <div class="tier">
+      <div class="days">1 day · 6 bottles</div>
+      <h3>Day Trip</h3>
+      <div class="tprice">$39<small> /cleanse</small></div>
+      <ul><li>Full flavor lineup</li><li>Morning ginger flare</li><li>Reset guide included</li></ul>
+      <a class="cta ghost add-cleanse" href="#cleanses">Pack my bag</a>
+    </div>
+    <div class="tier featured">
+      <div class="badge">Most wild</div>
+      <div class="days">3 days · 18 bottles</div>
+      <h3>Expedition</h3>
+      <div class="tprice">$109<small> /cleanse</small></div>
+      <ul><li>Everything in Day Trip</li><li>Evening cashew-vanilla calm</li><li>Daily ranger check-in texts</li><li>Free jungle delivery</li></ul>
+      <a class="cta add-cleanse" href="#cleanses">Begin the trek</a>
+    </div>
+    <div class="tier">
+      <div class="days">5 days · 30 bottles</div>
+      <h3>Full Jumanji</h3>
+      <div class="tprice">$179<small> /cleanse</small></div>
+      <ul><li>Everything in Expedition</li><li>Two wellness shot crates</li><li>Post-cleanse feast plan</li><li>You keep the machete*</li></ul>
+      <a class="cta ghost add-cleanse" href="#cleanses">Go all in</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STORY ============ -->
+<section id="story" class="auto">
+  <div class="section-head">
+    <div class="kicker">Our story</div>
+    <h2>It Started With One Overgrown Garden</h2>
+  </div>
+  <div class="story-wrap">
+    <div class="story-frame">
+      <div class="scene-bg" data-asset="story" style="position:absolute;inset:0;"><span class="tint"></span></div>
+      <svg class="story-vine" viewBox="0 0 400 460" preserveAspectRatio="none"></svg>
+    </div>
+    <div class="story-copy">
+      <span class="kicker">Est. in a kitchen, raised by a jungle</span>
+      <p>The Juice Pantry began the morning our courtyard garden stopped behaving — tomatoes in the
+      gutters, kale through the kitchen window, a passionfruit vine that unlocked the back door.
+      Rather than fight it, we bought a press.</p>
+      <p>Every bottle since has been a truce with the wild: heirloom produce from growers we know by
+      first name, pressed within hours of picking, poured into glass, and never, ever heated. The
+      jungle keeps growing. We keep bottling it.</p>
+      <p class="sig">— The Pantry Keepers</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIALS ============ -->
+<section id="voices" class="auto">
+  <div class="section-head">
+    <div class="kicker">Voices from the canopy</div>
+    <h2>Survivors' Notes</h2>
+  </div>
+  <div class="quotes">
+    <div class="quote"><div class="stars">★★★★★</div>
+      <blockquote>"Drank a Green Mamba on Monday. By Thursday I had opinions about composting and forearm veins like root systems. No regrets."</blockquote>
+      <div class="who">Maya R. · Expedition finisher</div></div>
+    <div class="quote"><div class="stars">★★★★★</div>
+      <blockquote>"The Solar Flare tastes like the sun apologised for every Monday. I've cancelled my coffee subscription and informed my ancestors."</blockquote>
+      <div class="who">Dev P. · Daily regular</div></div>
+    <div class="quote"><div class="stars">★★★★★</div>
+      <blockquote>"Ordered the Full Jumanji. There is now a vine in my kitchen I don't remember planting. It pays rent in passionfruit. 10/10."</blockquote>
+      <div class="who">Lena K. · Full Jumanji, twice</div></div>
+  </div>
+</section>
+
 <!-- ============ SCENE 4 · OVERGROWTH ============ -->
 <section id="overgrowth">
+  <div class="scene-bg" data-asset="overgrowth"><span class="tint"></span></div>
   <svg id="overgrowth-svg" preserveAspectRatio="none" aria-hidden="true"></svg>
   <div class="scene-inner">
     <div class="overgrowth-words">
@@ -301,8 +622,38 @@
   </div>
 </section>
 
+<!-- ============ FIND US / NEWSLETTER ============ -->
+<section id="findus" class="auto">
+  <div class="section-head">
+    <div class="kicker">Expeditions welcome</div>
+    <h2>Find the Pantry</h2>
+  </div>
+  <div class="findus-wrap">
+    <div class="stockists">
+      <h3>Watering holes</h3>
+      <ul>
+        <li><span>The Juice Pantry — Canopy Lane flagship</span><span>Mon–Sun · 7a–6p</span></li>
+        <li><span>Riverbend Farmers Market, Stall 12</span><span>Sat · sunrise–noon</span></li>
+        <li><span>Wildfern Grocer & Deli</span><span>Daily · fridge two</span></li>
+        <li><span>Basecamp Climbing Gym café</span><span>Mon–Fri · 6a–9p</span></li>
+        <li><span>The Glasshouse Yoga studio</span><span>Post-class only</span></li>
+      </ul>
+    </div>
+    <div class="signup">
+      <h3>Letters from the canopy</h3>
+      <p>One email a week: what got pressed, what the vines did, and a flavor that doesn't exist yet.
+      No spam — the jungle composts it.</p>
+      <form id="newsletter">
+        <input type="email" required placeholder="you@somewhere.wild" aria-label="Email address" />
+        <button class="cta" type="submit">Join the wild</button>
+      </form>
+    </div>
+  </div>
+</section>
+
 <!-- ============ SCENE 5 · FINALE ============ -->
 <section id="finale">
+  <div class="scene-bg" data-asset="finale"><span class="tint"></span></div>
   <div class="scene-inner finale-inner">
     <svg id="crown-svg" viewBox="0 0 700 260" aria-hidden="true"></svg>
     <div class="lineup" id="lineup"></div>
@@ -310,9 +661,35 @@
     <a class="cta" href="https://thejuicepantry.com/" target="_blank" rel="noopener">Enter the real pantry</a>
   </div>
   <footer>
-    <a href="#hero">Shop</a><a href="#hero">Cleanses</a><a href="#hero">Wholesale</a>
-    <a href="#hero">Find Us</a><a href="#hero">Our Story</a>
-    <div class="mock-note">A fan-made cinematic concept — not affiliated with thejuicepantry.com</div>
+    <div class="foot-grid">
+      <div>
+        <h4>The Juice Pantry</h4>
+        <p>Cold-pressed in small, slightly feral batches. Glass only. Jungle approved since the garden won.</p>
+      </div>
+      <div>
+        <h4>Shop</h4>
+        <ul><li><a href="#shop">All juices</a></li><li><a href="#cleanses">Cleanses</a></li>
+        <li><a href="#shop">Wellness shots</a></li><li><a href="#findus">Gift crates</a></li></ul>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul><li><a href="#flavors">Field guide</a></li><li><a href="#story">Our story</a></li>
+        <li><a href="#why">Why raw</a></li><li><a href="#findus">Stockists</a></li></ul>
+      </div>
+      <div>
+        <h4>The fine print</h4>
+        <ul><li><a href="#findus">Delivery zones</a></li><li><a href="#findus">Bottle returns</a></li>
+        <li><a href="#findus">Wholesale</a></li><li><a href="#findus">Contact a ranger</a></li></ul>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© 2026 The Juice Pantry — concept mock. *No actual machete included.</span>
+      <div class="socials">
+        <a href="#hero" aria-label="Instagram">📷</a><a href="#hero" aria-label="TikTok">🎬</a>
+        <a href="#hero" aria-label="Spotify">🎧</a><a href="#hero" aria-label="Email">✉️</a>
+      </div>
+    </div>
+    <div class="mock-note">A fan-made cinematic concept — not affiliated with thejuicepantry.com · Backdrops generated with Higgsfield Soul</div>
   </footer>
 </section>
 
@@ -323,21 +700,62 @@ gsap.registerPlugin(ScrollTrigger);
 const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* =====================================================
+   GENERATED CINEMATIC BACKDROPS (Higgsfield Soul)
+   URLs injected at build time; empty string = keep
+   the hand-drawn gradient art for that scene.
+===================================================== */
+const HF = 'https://d8j0ntlcm91z4.cloudfront.net/user_3Ey8eJ36Q3HGBhZyKbl6svDZIQU/';
+const ASSETS = {
+  hero:       {min:HF+'hf_20260611_065911_7d3a484f-a917-4d74-9b6b-211b0fbf44dc_min.webp',
+               raw:HF+'hf_20260611_065911_7d3a484f-a917-4d74-9b6b-211b0fbf44dc.png'},
+  pour:       null,
+  story:      null,
+  overgrowth: null,
+  finale:     null,
+  mamba:      null,
+  solar:      null,
+  dragon:     null,
+  gold:       null,
+};
+function assetURL(key){ return ASSETS[key] ? ASSETS[key].min : ''; }
+function loadAsset(slot, key){
+  const a = ASSETS[key];
+  if(!a){ slot.classList.add('dead'); return; }
+  const img = new Image();
+  img.alt = '';
+  img.onerror = ()=>{
+    if(a.raw && img.src !== a.raw){ img.src = a.raw; }
+    else slot.classList.add('dead');
+  };
+  img.src = a.min;
+  slot.prepend(img);
+}
+document.querySelectorAll('.scene-bg[data-asset]').forEach(slot=> loadAsset(slot, slot.dataset.asset));
+
+/* =====================================================
    FLAVOR DATA — the mock product line
 ===================================================== */
 const FLAVORS = [
   { id:'mamba',  name:'Green Mamba',   ing:'Kale · Apple · Cucumber · Lime',
-    note:'"It hunts your hangover at dawn."',
+    note:'"It hunts your hangover at dawn."', price:'$11',
     juice:'#7ddb3c', juiceDark:'#3a8f1d', cap:'#163a14', label:'#0e2a10' },
   { id:'solar',  name:'Solar Flare',   ing:'Orange · Mango · Turmeric · Ginger',
-    note:'"Sunrise, but you can chug it."',
+    note:'"Sunrise, but you can chug it."', price:'$11',
     juice:'#ffb13d', juiceDark:'#e06a10', cap:'#7a3a05', label:'#5c2c05' },
   { id:'dragon', name:"Dragon's Heart",ing:'Dragonfruit · Beet · Raspberry',
-    note:'"Beats louder the deeper you go."',
+    note:'"Beats louder the deeper you go."', price:'$12',
     juice:'#ff4f86', juiceDark:'#b80f55', cap:'#56082e', label:'#420724' },
   { id:'gold',   name:'Jungle Gold',   ing:'Pineapple · Passionfruit · Ginger',
-    note:'"Buried treasure, freshly pressed."',
+    note:'"Buried treasure, freshly pressed."', price:'$12',
     juice:'#ffd23f', juiceDark:'#dd9a06', cap:'#6b4a02', label:'#553a03' },
+];
+const EXTRAS = [
+  { id:'inferno', name:'Ginger Inferno', ing:'Ginger · Lemon · Cayenne — 2oz shot',
+    note:'', price:'$5',
+    juice:'#ffe08a', juiceDark:'#d98e1b', cap:'#5c2c05', label:'#4a2404' },
+  { id:'canopy', name:'Canopy Crate', ing:'All four flavors · mixed six-pack',
+    note:'', price:'$58',
+    juice:'#8fd4a0', juiceDark:'#2e7a40', cap:'#163a14', label:'#0e2a10' },
 ];
 
 /* =====================================================
@@ -360,7 +778,6 @@ function bottleSVG(f, scale, withIds){
       </linearGradient>
       <clipPath id="clip-${uid}"><path d="M78,86 L78,118 C78,150 52,158 52,196 L52,392 C52,408 64,416 100,416 C136,416 148,408 148,392 L148,196 C148,158 122,150 122,118 L122,86 Z"/></clipPath>
     </defs>
-    <!-- liquid (clipped to bottle), level group slides up/down -->
     <g clip-path="url(#clip-${uid})">
       <g ${withIds ? 'id="liquid-level"' : 'class="liquid-level"'}>
         <path ${withIds ? 'id="liquid-wave"' : 'class="liquid-wave"'} fill="url(#liq-${uid})"
@@ -368,12 +785,9 @@ function bottleSVG(f, scale, withIds){
       </g>
       <ellipse cx="100" cy="402" rx="44" ry="10" fill="rgba(0,0,0,.18)"/>
     </g>
-    <!-- glass body -->
     <path d="M78,86 L78,118 C78,150 52,158 52,196 L52,392 C52,408 64,416 100,416 C136,416 148,408 148,392 L148,196 C148,158 122,150 122,118 L122,86 Z"
       fill="url(#glass-${uid})" stroke="rgba(255,255,255,.35)" stroke-width="2.5"/>
-    <!-- highlight streak -->
     <path ${withIds ? 'id="glint"' : 'class="glint"'} d="M68,170 C60,200 60,330 66,380" stroke="rgba(255,255,255,.5)" stroke-width="6" stroke-linecap="round" fill="none" opacity=".5"/>
-    <!-- label -->
     <g>
       <rect x="52" y="240" width="96" height="92" rx="8" fill="${f.label}" stroke="rgba(255,255,255,.18)"/>
       <text x="100" y="276" text-anchor="middle" fill="#f4ead5" font-family="Cinzel,serif" font-weight="700"
@@ -383,7 +797,6 @@ function bottleSVG(f, scale, withIds){
       <text x="100" y="318" text-anchor="middle" fill="rgba(244,234,213,.6)" font-family="Outfit,sans-serif"
         font-size="8" letter-spacing="2">THE JUICE PANTRY</text>
     </g>
-    <!-- cap -->
     <g ${withIds ? 'id="hero-cap"' : 'class="cap"'}>
       <rect x="72" y="56" width="56" height="34" rx="7" fill="${f.cap}" stroke="rgba(255,255,255,.3)" stroke-width="2"/>
       <line x1="80" y1="58" x2="80" y2="88" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
@@ -424,7 +837,6 @@ function growVine(svg, x0, y0, angle0, length, opts={}){
   const deco = [];
   anchors.forEach((p,i)=>{
     if(i===0) return;
-    // leaves on most joints, alternating sides
     if(Math.random() < (opts.leafChance ?? .85)){
       const leaf = document.createElementNS(SVGNS,'path');
       const s = rand(.7,1.4)*(opts.leafScale||1);
@@ -435,7 +847,6 @@ function growVine(svg, x0, y0, angle0, length, opts={}){
         `translate(${p.x},${p.y}) rotate(${(p.a*180/Math.PI)+side*55}) scale(${s})`);
       svg.appendChild(leaf); deco.push(leaf);
     }
-    // occasional fruit / berry
     if(Math.random() < (opts.fruitChance ?? .22)){
       const fruit = document.createElementNS(SVGNS,'circle');
       fruit.setAttribute('cx',p.x); fruit.setAttribute('cy',p.y);
@@ -452,10 +863,49 @@ function growVine(svg, x0, y0, angle0, length, opts={}){
 }
 
 /* =====================================================
+   NAV + CART
+===================================================== */
+let cartCount = 0;
+const cartEl = document.getElementById('cartcount');
+function addToCart(btn, n=1){
+  cartCount += n;
+  cartEl.textContent = cartCount;
+  gsap.fromTo(cartEl,{scale:1.7},{scale:1, duration:.5, ease:'back.out(3)'});
+  if(btn){
+    const r = btn.getBoundingClientRect();
+    burstDroplets(r.left + r.width/2, r.top + r.height/2);
+  }
+}
+function burstDroplets(x,y){
+  if(REDUCED) return;
+  const colors=['#ffd23f','#ffac33','#b8f53d','#e92f8c','#ff3d6e'];
+  for(let i=0;i<14;i++){
+    const d=document.createElement('div');
+    d.className='burst-drop';
+    const s=rand(5,12);
+    d.style.cssText=`left:${x}px;top:${y}px;width:${s}px;height:${s*1.3}px;background:${colors[i%5]};`;
+    document.body.appendChild(d);
+    gsap.to(d,{
+      x:rand(-110,110), y:rand(-140,40), rotation:rand(-180,180), opacity:0,
+      duration:rand(.6,1.1), ease:'power2.out',
+      onComplete:()=>d.remove()
+    });
+    gsap.to(d,{y:'+=160', duration:rand(.6,1.1), ease:'power2.in'},0);
+  }
+}
+ScrollTrigger.create({
+  start:'top -60%',
+  onUpdate(self){ document.body.classList.toggle('scrolled', self.scroll() > innerHeight*.6); }
+});
+document.getElementById('mainnav').classList.remove('boot');
+setTimeout(()=>document.body.classList.toggle('scrolled', scrollY > innerHeight*.6), 100);
+document.getElementById('cartbtn').addEventListener('click',()=>addToCart(document.getElementById('cartbtn'),0));
+
+/* =====================================================
    SCENE 1 — hero entrance
 ===================================================== */
 gsap.from('.hero-title .word', {y:90, opacity:0, rotateX:-60, stagger:.18, duration:1.4, ease:'power4.out', delay:.2});
-gsap.from('.kicker, .hero-sub', {opacity:0, y:30, duration:1.2, stagger:.3, delay:.9, ease:'power3.out'});
+gsap.from('#hero .kicker, .hero-sub', {opacity:0, y:30, duration:1.2, stagger:.3, delay:.9, ease:'power3.out'});
 gsap.to('#hero .hero-content', {
   scrollTrigger:{trigger:'#hero', start:'top top', end:'bottom top', scrub:true},
   y:-160, opacity:0, scale:.92, ease:'none'
@@ -464,8 +914,13 @@ gsap.to('.hero-canopy', {
   scrollTrigger:{trigger:'#hero', start:'top top', end:'bottom top', scrub:true},
   y:-120, ease:'none'
 });
+/* slow Ken Burns drift on every backdrop + per-scene parallax */
+document.querySelectorAll('.scene-bg:not(.dead) img').forEach(img=>{
+  gsap.fromTo(img,{scale:1.18},{scale:1.05, ease:'none',
+    scrollTrigger:{trigger:img.closest('section') || img.closest('.story-frame'), start:'top bottom', end:'bottom top', scrub:true}});
+});
 
-/* nectar progress bar + overall page progress (drives corner vines + particles) */
+/* nectar progress bar + overall page progress */
 let pageProgress = 0;
 ScrollTrigger.create({
   trigger:document.body, start:'top top', end:'bottom bottom',
@@ -490,8 +945,7 @@ document.querySelectorAll('.corner-vine').forEach(svg=>{
         const p = Math.min(1, self.progress*1.6);
         gsap.set(v.path,{strokeDashoffset: v.len*(1-p)});
         v.deco.forEach((el,i)=>{
-          const t = Math.max(0, Math.min(1, (p - i/v.deco.length)*4));
-          el.style.opacity = t;
+          el.style.opacity = Math.max(0, Math.min(1, (p - i/v.deco.length)*4));
         });
       }
     });
@@ -504,7 +958,6 @@ document.querySelectorAll('.corner-vine').forEach(svg=>{
 const heroFlavor = FLAVORS[3]; // Jungle Gold
 document.getElementById('hero-bottle').innerHTML = bottleSVG(heroFlavor, 1, true);
 
-/* gushes: arcs erupting from the bottle mouth (svg coords: mouth ≈ 450,210 in 900x760) */
 const gushSVG = document.getElementById('gush-svg');
 const GUSH_DEFS = [
   {d:'M450,225 C430,120 300,90 200,160 C140,205 130,290 170,350', w:26, c:'#ffd23f'},
@@ -521,7 +974,6 @@ const gushes = GUSH_DEFS.map(g=>{
   gushSVG.appendChild(p);
   const len=p.getTotalLength();
   p.style.strokeDasharray=len; p.style.strokeDashoffset=len;
-  // splash blob at the end of each arc
   const end=p.getPointAtLength(len);
   const blob=document.createElementNS(SVGNS,'circle');
   blob.setAttribute('cx',end.x); blob.setAttribute('cy',end.y);
@@ -531,7 +983,6 @@ const gushes = GUSH_DEFS.map(g=>{
   return {p,len,blob};
 });
 
-/* floating fruit that orbits in during the gush */
 const POUR_FRUIT=[
   {emoji:'🍍',x:160,y:430},{emoji:'🥭',x:740,y:420},{emoji:'🍊',x:230,y:120},
   {emoji:'🫚',x:690,y:110},{emoji:'🍓',x:120,y:260},{emoji:'🥝',x:790,y:270},
@@ -552,44 +1003,67 @@ pourTitleEl.innerHTML = pourTitleEl.textContent.split('').map(c=>
 gsap.set('#pour-title .ch',{opacity:0, y:60, rotateZ:()=>rand(-30,30)});
 gsap.set('#pour-sub',{opacity:0});
 
-let pourState = {emit:0, mouthEl:null}; // particle hook for canvas
+let pourState = {emit:0, mouthEl:null};
 
 const pourTL = gsap.timeline({
   scrollTrigger:{
     trigger:'#pour', start:'top top', end:'+=3600', scrub:1, pin:true,
     onToggle(self){ document.body.classList.toggle('cinema', self.isActive); },
     onUpdate(self){
-      // canvas droplets fire while the gush is live
       pourState.emit = (self.progress > .42 && self.progress < .88) ? 1 : 0;
     }
   }
 });
 pourTL
-  // bottle rises & spins like it's possessed
   .fromTo('#hero-bottle',{y:260, scale:.6, rotateY:0},{y:0, scale:1, duration:.18, ease:'power2.out'},0)
   .to('#hero-bottle',{rotateY:1440, duration:.42, ease:'power1.inOut'},.05)
   .to('.pour-bg',{opacity:1, duration:.3},.2)
-  // cap unscrews…
+  .to('#pour .scene-bg',{opacity:1, duration:.3},.18)
   .to('#hero-cap',{rotation:540, y:-46, svgOrigin:'100 73', duration:.12, ease:'power2.in'},.36)
-  // …then swirls away into the canopy
   .to('#hero-cap',{x:260, y:-420, rotation:2200, opacity:0, duration:.22, ease:'power2.out'},.48)
-  // juice erupts: arcs draw out + blobs pop
   .to(gushes.map(g=>g.p),{strokeDashoffset:0, duration:.26, stagger:.04, ease:'power2.out'},.50)
   .to(gushes.map(g=>g.blob),{scale:1, duration:.18, stagger:.04, ease:'back.out(3)'},.60)
-  // bottle drains as it pours
   .to('#liquid-level',{y:230, duration:.34, ease:'none'},.50)
-  // fruit swirls in around the chaos
   .to(fruitEls,{opacity:1, scale:1, duration:.2, stagger:.03, ease:'back.out(2.5)'},.55)
   .to(fruitEls,{y:'-=30', rotation:()=>rand(-40,40), duration:.3, stagger:.03, ease:'sine.inOut'},.7)
-  // headline crashes in letter by letter
   .to('#pour-title .ch',{opacity:1, y:0, rotateZ:0, duration:.22, stagger:.012, ease:'back.out(2)'},.66)
   .to('#pour-sub',{opacity:1, duration:.15},.84)
-  // settle: bottle bows out
   .to('#hero-bottle',{scale:.85, y:40, opacity:.0, duration:.12, ease:'power2.in'},.9)
   .to(gushSVG,{opacity:0, duration:.1},.92);
 
-/* track bottle-mouth screen position for canvas droplets */
 pourState.mouthEl = document.getElementById('hero-bottle');
+
+/* =====================================================
+   SHOP GRID
+===================================================== */
+const shopGrid = document.getElementById('shop-grid');
+[...FLAVORS, ...EXTRAS].forEach(f=>{
+  const card=document.createElement('div');
+  card.className='sku';
+  card.innerHTML=`
+    <div class="glowbed" style="background:radial-gradient(70% 60% at 50% 30%,${f.juice},transparent 75%)"></div>
+    <div class="sku-bottle">${bottleSVG(f)}</div>
+    <h3 style="color:${f.juice}">${f.name}</h3>
+    <div class="ing">${f.ing}</div>
+    <div class="price">${f.price}</div>
+    <button class="addbtn">Add to crate</button>`;
+  shopGrid.appendChild(card);
+  gsap.to(card.querySelector('.sku-bottle svg'),
+    {rotateY:360, duration:rand(7,12), repeat:-1, ease:'none'});
+  card.querySelector('.addbtn').addEventListener('click',e=>{
+    addToCart(e.currentTarget);
+    const b=e.currentTarget;
+    b.textContent='In the crate ✓'; b.classList.add('added');
+    setTimeout(()=>{b.textContent='Add to crate'; b.classList.remove('added');},1600);
+  });
+});
+gsap.from('.sku',{
+  scrollTrigger:{trigger:'#shop-grid', start:'top 80%'},
+  y:90, opacity:0, stagger:.09, duration:.9, ease:'power3.out'
+});
+document.querySelectorAll('.add-cleanse').forEach(a=>{
+  a.addEventListener('click',e=>{ e.preventDefault(); addToCart(a); });
+});
 
 /* =====================================================
    SCENE 3 — FLAVOR WORLDS (horizontal scroll)
@@ -608,7 +1082,11 @@ const splashBlob = (c1,c2)=>`
 FLAVORS.forEach(f=>{
   const card=document.createElement('div');
   card.className='flavor-card'; card.dataset.flavor=f.id;
+  const bg = ASSETS[f.id]
+    ? `<div class="card-bg"><img src="${assetURL(f.id)}" alt="" onerror="this.parentElement.classList.add('dead')"><span class="tint"></span></div>`
+    : '';
   card.innerHTML = `
+    ${bg}
     ${splashBlob(f.juice,f.juiceDark)}
     <svg class="card-vine" viewBox="0 0 470 620" preserveAspectRatio="none"></svg>
     <div class="bottle-wrap">${bottleSVG(f)}</div>
@@ -632,13 +1110,10 @@ const horiz = gsap.to(track, {
 });
 
 document.querySelectorAll('.flavor-card').forEach(card=>{
-  // bottles spin forever, each at its own pace
   gsap.to(card.querySelector('.bottle-wrap svg'),
     {rotateY:360, duration:rand(5,9), repeat:-1, ease:'none'});
-  // splash breathes
   gsap.to(card.querySelector('.splash'),
     {scale:1.12, rotation:8, duration:rand(3,5), yoyo:true, repeat:-1, ease:'sine.inOut', transformOrigin:'center'});
-  // vines crawl over the card as it scrolls into view
   const vsvg = card.querySelector('.card-vine');
   const cardVines = [
     growVine(vsvg, -10, rand(80,200), rand(-.4,.4), rand(280,380), {curl:.05, width:4, stroke:'#3f8f4f', leafScale:.75}),
@@ -658,11 +1133,65 @@ document.querySelectorAll('.flavor-card').forEach(card=>{
       });
     }
   });
-  // card parallax pop
   gsap.from(card, {
     scale:.85, opacity:.4, ease:'none',
     scrollTrigger:{trigger:card, containerAnimation:horiz, start:'left right', end:'left 55%', scrub:true}
   });
+});
+
+/* =====================================================
+   WHY — animated counters
+===================================================== */
+document.querySelectorAll('.stat .num [data-count]').forEach(el=>{
+  const target = parseFloat(el.dataset.count);
+  ScrollTrigger.create({
+    trigger:el, start:'top 85%', once:true,
+    onEnter(){
+      const counter = {v: parseFloat(el.textContent) || 0};
+      gsap.to(counter,{
+        v:target, duration:1.8, ease:'power2.out',
+        onUpdate(){ el.textContent = Math.round(counter.v); }
+      });
+    }
+  });
+});
+gsap.from('.stat',{
+  scrollTrigger:{trigger:'.why-grid', start:'top 82%'},
+  y:60, opacity:0, stagger:.12, duration:.9, ease:'power3.out'
+});
+gsap.from('.tier',{
+  scrollTrigger:{trigger:'.tiers', start:'top 82%'},
+  y:80, opacity:0, stagger:.14, duration:.9, ease:'power3.out'
+});
+gsap.from('.quote',{
+  scrollTrigger:{trigger:'.quotes', start:'top 85%'},
+  y:60, opacity:0, stagger:.12, duration:.8, ease:'power3.out'
+});
+
+/* story frame vine + reveal */
+const storyVineSvg = document.querySelector('.story-vine');
+const storyVines = [
+  growVine(storyVineSvg, -5, 420, -.5, 300, {curl:-.06, width:4, stroke:'#3f8f4f', leafScale:.8}),
+  growVine(storyVineSvg, 405, 80, Math.PI-.4, 260, {curl:.06, width:3, stroke:'#46a058', leafScale:.7}),
+];
+storyVines.forEach(v=>gsap.set(v.deco,{opacity:0}));
+ScrollTrigger.create({
+  trigger:'.story-frame', start:'top 80%', end:'center 45%', scrub:true,
+  onUpdate(self){
+    storyVines.forEach((v,vi)=>{
+      const p=Math.min(1, Math.max(0,self.progress*1.2 - vi*.15));
+      gsap.set(v.path,{strokeDashoffset:v.len*(1-p)});
+      v.deco.forEach((el,i)=> el.style.opacity = Math.max(0,Math.min(1,(p-i/v.deco.length)*3)));
+    });
+  }
+});
+gsap.from('.story-frame',{
+  scrollTrigger:{trigger:'.story-wrap', start:'top 78%'},
+  x:-70, opacity:0, duration:1, ease:'power3.out'
+});
+gsap.from('.story-copy',{
+  scrollTrigger:{trigger:'.story-wrap', start:'top 78%'},
+  x:70, opacity:0, duration:1, ease:'power3.out'
 });
 
 /* =====================================================
@@ -715,9 +1244,20 @@ ogTL
   .to('#overgrowth p',{opacity:1, duration:.2},.8);
 
 /* =====================================================
+   NEWSLETTER (mock)
+===================================================== */
+document.getElementById('newsletter').addEventListener('submit',e=>{
+  e.preventDefault();
+  const btn=e.target.querySelector('button'), input=e.target.querySelector('input');
+  btn.textContent='Welcome to the wild 🌿';
+  input.disabled=true; btn.disabled=true;
+  const r=btn.getBoundingClientRect();
+  burstDroplets(r.left+r.width/2, r.top+r.height/2);
+});
+
+/* =====================================================
    SCENE 5 — FINALE
 ===================================================== */
-/* splash crown */
 const crown=document.getElementById('crown-svg');
 const crownPaths=[];
 for(let i=0;i<14;i++){
@@ -740,7 +1280,6 @@ crownPaths.forEach(({p,tip})=>{
   gsap.set(tip,{scale:0, transformOrigin:`${tip.getAttribute('cx')}px ${tip.getAttribute('cy')}px`});
 });
 
-/* bottle line-up */
 const lineup=document.getElementById('lineup');
 FLAVORS.forEach(f=>{
   const d=document.createElement('div');
@@ -757,7 +1296,7 @@ finTL
   .to(crownPaths.map(c=>c.tip),{scale:1, stagger:.04, duration:.3, ease:'back.out(3)'},.3)
   .from('.lineup .li-bottle',{y:120, opacity:0, stagger:.08, duration:.5, ease:'back.out(1.6)'},.2)
   .from('#finale h2',{opacity:0, scale:.7, duration:.4, ease:'back.out(2)'},.5)
-  .from('.cta, footer',{opacity:0, y:40, stagger:.1, duration:.4},.7);
+  .from('#finale .cta, footer',{opacity:0, y:40, stagger:.1, duration:.4},.7);
 
 /* =====================================================
    CANVAS FX — fireflies, juice droplets, falling leaves
@@ -788,7 +1327,6 @@ function spawnLeaf(){
 function fxLoop(time){
   ctx.clearRect(0,0,CW,CH);
 
-  // fireflies — denser as you go deeper into the jungle
   const flyCount = Math.floor(12 + pageProgress*28);
   for(let i=0;i<flyCount && i<flies.length;i++){
     const f=flies[i];
@@ -802,7 +1340,6 @@ function fxLoop(time){
     ctx.shadowBlur=0;
   }
 
-  // juice droplets while the pour scene is gushing
   if(pourState.emit && pourState.mouthEl){
     const r=pourState.mouthEl.getBoundingClientRect();
     const mx=r.left+r.width/2, my=r.top+r.height*.12;
@@ -818,7 +1355,6 @@ function fxLoop(time){
     ctx.globalAlpha=1;
   }
 
-  // leaves drift down in the back half of the journey
   if(pageProgress>.55 && Math.random()<.10 && leaves.length<36) spawnLeaf();
   for(let i=leaves.length-1;i>=0;i--){
     const l=leaves[i];
