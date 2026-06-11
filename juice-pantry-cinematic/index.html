@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Juice Pantry — The Jungle Awakens</title>
+<meta name="description" content="A cinematic scroll-driven reimagining of The Juice Pantry. Bottles spin, caps fly, juice gushes, and a living jungle grows through the page." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --jungle-deep:#06130c;
+    --jungle-dark:#0a1f12;
+    --jungle-mid:#14402a;
+    --emerald:#2ecc71;
+    --lime:#b8f53d;
+    --mango:#ffac33;
+    --turmeric:#ff7a18;
+    --beet:#e92f8c;
+    --dragon:#ff3d6e;
+    --pineapple:#ffd23f;
+    --mist:#9fd8b4;
+    --paper:#f4ead5;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:auto;}
+  body{
+    background:var(--jungle-deep);
+    color:var(--paper);
+    font-family:'Outfit',sans-serif;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--lime);color:var(--jungle-deep);}
+
+  /* ---------- cinematic chrome ---------- */
+  .letterbox{
+    position:fixed;left:0;width:100%;height:0;background:#000;z-index:60;
+    transition:height .8s cubic-bezier(.7,0,.3,1);pointer-events:none;
+  }
+  .letterbox.top{top:0;}
+  .letterbox.bottom{bottom:0;}
+  body.cinema .letterbox{height:clamp(28px,6vh,64px);}
+
+  .grain{
+    position:fixed;inset:-100%;z-index:55;pointer-events:none;opacity:.07;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation:grainShift 1.2s steps(4) infinite;
+  }
+  @keyframes grainShift{
+    0%{transform:translate(0,0);}25%{transform:translate(-2%,3%);}
+    50%{transform:translate(3%,-2%);}75%{transform:translate(-3%,-3%);}100%{transform:translate(0,0);}
+  }
+  .vignette{
+    position:fixed;inset:0;z-index:54;pointer-events:none;
+    background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.55) 100%);
+  }
+
+  #fx-canvas{position:fixed;inset:0;z-index:52;pointer-events:none;}
+
+  /* corner vines that grow with overall scroll */
+  .corner-vine{position:fixed;z-index:53;pointer-events:none;width:min(34vw,420px);height:min(34vw,420px);}
+  .corner-vine.tl{top:-10px;left:-10px;}
+  .corner-vine.tr{top:-10px;right:-10px;transform:scaleX(-1);}
+  .corner-vine.bl{bottom:-10px;left:-10px;transform:scaleY(-1);}
+  .corner-vine.br{bottom:-10px;right:-10px;transform:scale(-1,-1);}
+
+  /* progress nectar bar */
+  .nectar{
+    position:fixed;top:0;left:0;height:4px;width:100%;z-index:70;transform-origin:left;
+    background:linear-gradient(90deg,var(--lime),var(--mango),var(--beet),var(--dragon));
+    transform:scaleX(0);
+  }
+
+  /* ---------- shared layout ---------- */
+  section{position:relative;min-height:100vh;overflow:hidden;}
+  .scene-inner{position:relative;height:100vh;width:100%;display:flex;align-items:center;justify-content:center;}
+  h1,h2,h3{font-family:'Cinzel',serif;font-weight:900;line-height:1.02;}
+  .kicker{
+    letter-spacing:.55em;text-transform:uppercase;font-size:clamp(.6rem,1.4vw,.85rem);
+    color:var(--lime);font-weight:600;
+  }
+
+  /* ---------- HERO ---------- */
+  #hero{background:
+    radial-gradient(120% 90% at 50% 110%, #123620 0%, transparent 60%),
+    linear-gradient(180deg,#020805 0%,var(--jungle-deep) 50%,var(--jungle-dark) 100%);
+  }
+  .shaft{
+    position:absolute;top:-20%;width:18vw;height:150%;
+    background:linear-gradient(180deg,rgba(255,236,170,.28),rgba(255,236,170,0) 70%);
+    filter:blur(18px);transform:skewX(-14deg);mix-blend-mode:screen;
+    animation:sway 9s ease-in-out infinite alternate;
+  }
+  .shaft.s1{left:12%;}
+  .shaft.s2{left:38%;width:10vw;animation-delay:-3s;opacity:.7;}
+  .shaft.s3{right:14%;animation-delay:-6s;opacity:.5;}
+  @keyframes sway{from{transform:skewX(-17deg) translateX(-2vw);}to{transform:skewX(-9deg) translateX(2vw);}}
+  .mist{
+    position:absolute;width:70vw;height:38vh;border-radius:50%;
+    background:radial-gradient(ellipse,rgba(159,216,180,.16),transparent 70%);
+    filter:blur(30px);mix-blend-mode:screen;
+  }
+  .mist.m1{bottom:-8vh;left:-12vw;animation:drift 26s linear infinite alternate;}
+  .mist.m2{bottom:6vh;right:-20vw;animation:drift 34s linear infinite alternate-reverse;}
+  @keyframes drift{from{transform:translateX(-6vw);}to{transform:translateX(10vw);}}
+
+  .hero-content{text-align:center;z-index:3;padding:0 6vw;}
+  .hero-title{
+    font-size:clamp(2.6rem,9vw,7.5rem);margin:.35em 0 .25em;
+    background:linear-gradient(180deg,#fdf6da 25%,var(--pineapple) 55%,var(--turmeric) 90%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:0 0 80px rgba(255,210,63,.25);
+  }
+  .hero-title .word{display:inline-block;}
+  .hero-sub{
+    max-width:560px;margin:0 auto;font-weight:300;font-size:clamp(.95rem,2vw,1.25rem);
+    color:#cfe7d6;
+  }
+  .scroll-cue{
+    position:absolute;bottom:7vh;left:50%;transform:translateX(-50%);
+    display:flex;flex-direction:column;align-items:center;gap:.6rem;z-index:3;
+    color:var(--mist);letter-spacing:.4em;font-size:.65rem;text-transform:uppercase;
+  }
+  .scroll-cue .drop{
+    width:10px;height:16px;border-radius:50% 50% 60% 60%;background:var(--lime);
+    animation:dropFall 1.6s ease-in infinite;
+  }
+  @keyframes dropFall{0%{transform:translateY(-8px) scale(.7);opacity:0;}30%{opacity:1;}100%{transform:translateY(18px) scale(1);opacity:0;}}
+  .hero-canopy{position:absolute;top:0;left:0;width:100%;z-index:2;pointer-events:none;}
+
+  /* ---------- POUR SCENE ---------- */
+  #pour{background:linear-gradient(180deg,var(--jungle-dark),#1a0f24 120%);}
+  .pour-bg{
+    position:absolute;inset:0;opacity:0;
+    background:radial-gradient(80% 70% at 50% 45%,rgba(255,172,51,.30),rgba(233,47,140,.12) 55%,transparent 80%);
+  }
+  .pour-stage{position:relative;width:min(92vw,900px);height:84vh;display:flex;align-items:center;justify-content:center;}
+  .bottle-3d{width:clamp(150px,24vh,250px);transform-style:preserve-3d;perspective:900px;z-index:4;}
+  .bottle-3d svg{width:100%;height:auto;display:block;filter:drop-shadow(0 30px 50px rgba(0,0,0,.6));}
+  #gush-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;z-index:3;}
+  .pour-words{
+    position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    z-index:5;pointer-events:none;text-align:center;
+  }
+  .pour-words h2{
+    font-size:clamp(2.2rem,8vw,6rem);
+    color:transparent;-webkit-background-clip:text;background-clip:text;
+    background:linear-gradient(90deg,var(--lime),var(--mango),var(--dragon));
+  }
+  .pour-words h2 .ch{display:inline-block;}
+  .pour-words p{margin-top:1rem;color:#e8d9c2;font-weight:300;letter-spacing:.2em;text-transform:uppercase;font-size:clamp(.6rem,1.6vw,.9rem);}
+
+  /* ---------- FLAVOR WORLDS (horizontal) ---------- */
+  #flavors{background:var(--jungle-deep);}
+  .flavors-head{
+    position:absolute;top:9vh;left:0;width:100%;text-align:center;z-index:5;pointer-events:none;
+  }
+  .flavors-head h2{font-size:clamp(1.6rem,4.5vw,3.2rem);color:var(--paper);}
+  .flavor-track{
+    display:flex;align-items:center;height:100vh;width:max-content;
+    padding:0 12vw;gap:6vw;will-change:transform;
+  }
+  .flavor-card{
+    position:relative;width:min(78vw,470px);height:min(72vh,620px);flex-shrink:0;
+    border-radius:26px;padding:7%;overflow:hidden;
+    display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+    background:rgba(255,255,255,.035);
+    border:1px solid rgba(255,255,255,.10);
+    backdrop-filter:blur(6px);
+    box-shadow:0 40px 80px rgba(0,0,0,.45);
+  }
+  .flavor-card .splash{position:absolute;top:-12%;left:-12%;width:124%;height:124%;z-index:0;opacity:.9;}
+  .flavor-card .card-vine{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;}
+  .flavor-card .bottle-wrap{
+    position:absolute;top:6%;left:50%;transform:translateX(-50%);
+    width:36%;z-index:1;perspective:700px;
+  }
+  .flavor-card .bottle-wrap svg{width:100%;height:auto;filter:drop-shadow(0 24px 36px rgba(0,0,0,.55));}
+  .flavor-card .meta{position:relative;z-index:3;text-align:center;}
+  .flavor-card .meta h3{font-size:clamp(1.5rem,4vw,2.3rem);letter-spacing:.04em;}
+  .flavor-card .meta .ing{
+    margin:.7rem 0 .9rem;font-weight:300;color:#e9f3ea;font-size:clamp(.8rem,1.7vw,.95rem);
+    letter-spacing:.12em;text-transform:uppercase;
+  }
+  .flavor-card .meta .note{font-style:italic;color:#c9dcc9;font-size:clamp(.8rem,1.7vw,.95rem);font-weight:300;}
+
+  /* ---------- OVERGROWTH ---------- */
+  #overgrowth{background:linear-gradient(180deg,var(--jungle-deep),var(--jungle-mid) 140%);}
+  #overgrowth-svg{position:absolute;inset:0;width:100%;height:100%;}
+  .overgrowth-words{position:relative;z-index:3;text-align:center;padding:0 6vw;}
+  .overgrowth-words h2{font-size:clamp(2.2rem,7vw,5.5rem);}
+  .overgrowth-words h2 .word{display:inline-block;color:transparent;background-clip:text;-webkit-background-clip:text;
+    background-image:linear-gradient(180deg,#f8ffe9,var(--lime) 70%);}
+  .overgrowth-words p{margin-top:1.4rem;max-width:520px;margin-inline:auto;font-weight:300;color:#d9ecd9;}
+
+  /* ---------- FINALE ---------- */
+  #finale{background:radial-gradient(100% 80% at 50% 100%,#23501f 0%,var(--jungle-deep) 70%);}
+  .finale-inner{flex-direction:column;gap:4vh;text-align:center;padding-top:8vh;}
+  #crown-svg{width:min(80vw,700px);height:auto;overflow:visible;}
+  .lineup{display:flex;align-items:flex-end;gap:clamp(.6rem,2.5vw,2rem);justify-content:center;}
+  .lineup .li-bottle{width:clamp(44px,7vw,84px);perspective:500px;}
+  .lineup .li-bottle svg{width:100%;height:auto;filter:drop-shadow(0 18px 26px rgba(0,0,0,.5));}
+  .finale-inner h2{font-size:clamp(2rem,6vw,4.5rem);
+    background:linear-gradient(90deg,var(--pineapple),var(--lime));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .cta{
+    margin-top:1rem;display:inline-block;padding:1rem 2.6rem;border-radius:999px;
+    font-family:'Outfit';font-weight:800;letter-spacing:.18em;text-transform:uppercase;font-size:.8rem;
+    color:var(--jungle-deep);background:linear-gradient(90deg,var(--lime),var(--pineapple));
+    text-decoration:none;box-shadow:0 12px 40px rgba(184,245,61,.35);
+    transition:transform .3s ease,box-shadow .3s ease;
+  }
+  .cta:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 18px 60px rgba(184,245,61,.5);}
+  footer{
+    position:relative;z-index:3;display:flex;flex-wrap:wrap;gap:2.4rem;justify-content:center;
+    padding:7vh 6vw 6vh;color:#a9c7ab;font-size:.75rem;letter-spacing:.3em;text-transform:uppercase;
+  }
+  footer a{color:inherit;text-decoration:none;border-bottom:1px solid transparent;transition:color .3s,border-color .3s;}
+  footer a:hover{color:var(--lime);border-color:var(--lime);}
+  .mock-note{
+    width:100%;text-align:center;margin-top:2.5rem;letter-spacing:.12em;font-size:.62rem;color:#5e7a62;
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .shaft,.mist,.grain,.scroll-cue .drop{animation:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="nectar" id="nectar"></div>
+<div class="letterbox top"></div>
+<div class="letterbox bottom"></div>
+<div class="grain"></div>
+<div class="vignette"></div>
+<canvas id="fx-canvas"></canvas>
+
+<svg class="corner-vine tl" viewBox="0 0 400 400" aria-hidden="true"></svg>
+<svg class="corner-vine tr" viewBox="0 0 400 400" aria-hidden="true"></svg>
+<svg class="corner-vine bl" viewBox="0 0 400 400" aria-hidden="true"></svg>
+<svg class="corner-vine br" viewBox="0 0 400 400" aria-hidden="true"></svg>
+
+<!-- ============ SCENE 1 · HERO ============ -->
+<section id="hero">
+  <svg class="hero-canopy" viewBox="0 0 1440 320" preserveAspectRatio="xMidYMin slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="leafShade" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#0c2a18"/><stop offset="1" stop-color="#051209"/>
+      </linearGradient>
+    </defs>
+    <path fill="url(#leafShade)" d="M0,0 H1440 V90 C1320,180 1240,60 1120,150 C1040,215 950,80 860,140 C760,210 700,70 590,130 C480,190 420,60 320,120 C220,180 120,70 0,140 Z"/>
+    <path fill="#0a2014" opacity=".8" d="M0,0 H1440 V40 C1300,130 1180,30 1050,100 C930,165 850,40 720,95 C600,145 520,30 400,85 C290,135 160,35 0,95 Z"/>
+  </svg>
+  <div class="shaft s1"></div><div class="shaft s2"></div><div class="shaft s3"></div>
+  <div class="mist m1"></div><div class="mist m2"></div>
+  <div class="scene-inner">
+    <div class="hero-content">
+      <div class="kicker">The Juice Pantry presents</div>
+      <h1 class="hero-title"><span class="word">THE</span> <span class="word">JUNGLE</span> <span class="word">AWAKENS</span></h1>
+      <p class="hero-sub">Somewhere between the orchard and the wild, our bottles came alive.
+      Scroll down — and don't say we didn't warn you.</p>
+    </div>
+  </div>
+  <div class="scroll-cue"><span>Scroll to release</span><span class="drop"></span></div>
+</section>
+
+<!-- ============ SCENE 2 · THE POUR ============ -->
+<section id="pour">
+  <div class="pour-bg"></div>
+  <div class="scene-inner">
+    <div class="pour-stage">
+      <svg id="gush-svg" viewBox="0 0 900 760" preserveAspectRatio="xMidYMid meet"></svg>
+      <div class="bottle-3d" id="hero-bottle"></div>
+      <div class="pour-words">
+        <h2 id="pour-title">TASTE THE WILD</h2>
+        <p id="pour-sub">cold-pressed · untamed · alive</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SCENE 3 · FLAVOR WORLDS ============ -->
+<section id="flavors">
+  <div class="flavors-head">
+    <div class="kicker">Field guide</div>
+    <h2>Creatures of the Pantry</h2>
+  </div>
+  <div class="flavor-track" id="flavor-track"></div>
+</section>
+
+<!-- ============ SCENE 4 · OVERGROWTH ============ -->
+<section id="overgrowth">
+  <svg id="overgrowth-svg" preserveAspectRatio="none" aria-hidden="true"></svg>
+  <div class="scene-inner">
+    <div class="overgrowth-words">
+      <div class="kicker">No going back now</div>
+      <h2><span class="word">LET</span> <span class="word">THE</span> <span class="word">JUNGLE</span> <span class="word">IN</span></h2>
+      <p>Every bottle is two pounds of living produce, pressed slow and never heated —
+      which might explain why the vines keep following you down the page.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SCENE 5 · FINALE ============ -->
+<section id="finale">
+  <div class="scene-inner finale-inner">
+    <svg id="crown-svg" viewBox="0 0 700 260" aria-hidden="true"></svg>
+    <div class="lineup" id="lineup"></div>
+    <h2>DRINK THE WILD</h2>
+    <a class="cta" href="https://thejuicepantry.com/" target="_blank" rel="noopener">Enter the real pantry</a>
+  </div>
+  <footer>
+    <a href="#hero">Shop</a><a href="#hero">Cleanses</a><a href="#hero">Wholesale</a>
+    <a href="#hero">Find Us</a><a href="#hero">Our Story</a>
+    <div class="mock-note">A fan-made cinematic concept — not affiliated with thejuicepantry.com</div>
+  </footer>
+</section>
+
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* =====================================================
+   FLAVOR DATA — the mock product line
+===================================================== */
+const FLAVORS = [
+  { id:'mamba',  name:'Green Mamba',   ing:'Kale · Apple · Cucumber · Lime',
+    note:'"It hunts your hangover at dawn."',
+    juice:'#7ddb3c', juiceDark:'#3a8f1d', cap:'#163a14', label:'#0e2a10' },
+  { id:'solar',  name:'Solar Flare',   ing:'Orange · Mango · Turmeric · Ginger',
+    note:'"Sunrise, but you can chug it."',
+    juice:'#ffb13d', juiceDark:'#e06a10', cap:'#7a3a05', label:'#5c2c05' },
+  { id:'dragon', name:"Dragon's Heart",ing:'Dragonfruit · Beet · Raspberry',
+    note:'"Beats louder the deeper you go."',
+    juice:'#ff4f86', juiceDark:'#b80f55', cap:'#56082e', label:'#420724' },
+  { id:'gold',   name:'Jungle Gold',   ing:'Pineapple · Passionfruit · Ginger',
+    note:'"Buried treasure, freshly pressed."',
+    juice:'#ffd23f', juiceDark:'#dd9a06', cap:'#6b4a02', label:'#553a03' },
+];
+
+/* =====================================================
+   BOTTLE SVG BUILDER — body, liquid, label, cap
+===================================================== */
+function bottleSVG(f, scale, withIds){
+  const uid = f.id + (withIds ? '-hero' : '-' + Math.random().toString(36).slice(2,7));
+  return `
+  <svg viewBox="0 0 200 430" overflow="visible">
+    <defs>
+      <linearGradient id="glass-${uid}" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="rgba(255,255,255,.30)"/>
+        <stop offset=".18" stop-color="rgba(255,255,255,.06)"/>
+        <stop offset=".82" stop-color="rgba(255,255,255,.04)"/>
+        <stop offset="1" stop-color="rgba(255,255,255,.22)"/>
+      </linearGradient>
+      <linearGradient id="liq-${uid}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="${f.juice}"/>
+        <stop offset="1" stop-color="${f.juiceDark}"/>
+      </linearGradient>
+      <clipPath id="clip-${uid}"><path d="M78,86 L78,118 C78,150 52,158 52,196 L52,392 C52,408 64,416 100,416 C136,416 148,408 148,392 L148,196 C148,158 122,150 122,118 L122,86 Z"/></clipPath>
+    </defs>
+    <!-- liquid (clipped to bottle), level group slides up/down -->
+    <g clip-path="url(#clip-${uid})">
+      <g ${withIds ? 'id="liquid-level"' : 'class="liquid-level"'}>
+        <path ${withIds ? 'id="liquid-wave"' : 'class="liquid-wave"'} fill="url(#liq-${uid})"
+          d="M30,150 Q65,138 100,150 T170,150 L170,430 L30,430 Z"/>
+      </g>
+      <ellipse cx="100" cy="402" rx="44" ry="10" fill="rgba(0,0,0,.18)"/>
+    </g>
+    <!-- glass body -->
+    <path d="M78,86 L78,118 C78,150 52,158 52,196 L52,392 C52,408 64,416 100,416 C136,416 148,408 148,392 L148,196 C148,158 122,150 122,118 L122,86 Z"
+      fill="url(#glass-${uid})" stroke="rgba(255,255,255,.35)" stroke-width="2.5"/>
+    <!-- highlight streak -->
+    <path ${withIds ? 'id="glint"' : 'class="glint"'} d="M68,170 C60,200 60,330 66,380" stroke="rgba(255,255,255,.5)" stroke-width="6" stroke-linecap="round" fill="none" opacity=".5"/>
+    <!-- label -->
+    <g>
+      <rect x="52" y="240" width="96" height="92" rx="8" fill="${f.label}" stroke="rgba(255,255,255,.18)"/>
+      <text x="100" y="276" text-anchor="middle" fill="#f4ead5" font-family="Cinzel,serif" font-weight="700"
+        font-size="15" letter-spacing="1">${f.name.split(' ')[0].toUpperCase()}</text>
+      <text x="100" y="298" text-anchor="middle" fill="${f.juice}" font-family="Cinzel,serif" font-weight="700"
+        font-size="15" letter-spacing="1">${(f.name.split(' ')[1]||'').toUpperCase()}</text>
+      <text x="100" y="318" text-anchor="middle" fill="rgba(244,234,213,.6)" font-family="Outfit,sans-serif"
+        font-size="8" letter-spacing="2">THE JUICE PANTRY</text>
+    </g>
+    <!-- cap -->
+    <g ${withIds ? 'id="hero-cap"' : 'class="cap"'}>
+      <rect x="72" y="56" width="56" height="34" rx="7" fill="${f.cap}" stroke="rgba(255,255,255,.3)" stroke-width="2"/>
+      <line x1="80" y1="58" x2="80" y2="88" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
+      <line x1="92" y1="58" x2="92" y2="88" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
+      <line x1="104" y1="58" x2="104" y2="88" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
+      <line x1="116" y1="58" x2="116" y2="88" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
+    </g>
+  </svg>`;
+}
+
+/* =====================================================
+   PROCEDURAL VINES — wiggly paths with leaves & fruit
+===================================================== */
+const SVGNS = 'http://www.w3.org/2000/svg';
+function rand(a,b){ return a + Math.random()*(b-a); }
+
+function growVine(svg, x0, y0, angle0, length, opts={}){
+  const seg = opts.seg || 9;
+  const step = length/seg;
+  let x=x0, y=y0, a=angle0;
+  let d = `M${x.toFixed(1)},${y.toFixed(1)}`;
+  const anchors = [];
+  for(let i=0;i<seg;i++){
+    a += rand(-.55,.55) + (opts.curl||0);
+    const cx = x + Math.cos(a-.3)*step*.6, cy = y + Math.sin(a-.3)*step*.6;
+    x += Math.cos(a)*step; y += Math.sin(a)*step;
+    d += ` Q${cx.toFixed(1)},${cy.toFixed(1)} ${x.toFixed(1)},${y.toFixed(1)}`;
+    anchors.push({x,y,a});
+  }
+  const path = document.createElementNS(SVGNS,'path');
+  path.setAttribute('d', d);
+  path.setAttribute('fill','none');
+  path.setAttribute('stroke', opts.stroke || '#3f8f4f');
+  path.setAttribute('stroke-width', opts.width || 5);
+  path.setAttribute('stroke-linecap','round');
+  svg.appendChild(path);
+
+  const deco = [];
+  anchors.forEach((p,i)=>{
+    if(i===0) return;
+    // leaves on most joints, alternating sides
+    if(Math.random() < (opts.leafChance ?? .85)){
+      const leaf = document.createElementNS(SVGNS,'path');
+      const s = rand(.7,1.4)*(opts.leafScale||1);
+      const side = i%2 ? 1 : -1;
+      leaf.setAttribute('d','M0,0 Q14,-12 30,0 Q14,12 0,0');
+      leaf.setAttribute('fill', opts.leaf || '#4caf50');
+      leaf.setAttribute('transform',
+        `translate(${p.x},${p.y}) rotate(${(p.a*180/Math.PI)+side*55}) scale(${s})`);
+      svg.appendChild(leaf); deco.push(leaf);
+    }
+    // occasional fruit / berry
+    if(Math.random() < (opts.fruitChance ?? .22)){
+      const fruit = document.createElementNS(SVGNS,'circle');
+      fruit.setAttribute('cx',p.x); fruit.setAttribute('cy',p.y);
+      fruit.setAttribute('r', rand(5,11)*(opts.leafScale||1));
+      const palette = opts.fruits || ['#ffac33','#e92f8c','#ffd23f','#ff3d6e','#b8f53d'];
+      fruit.setAttribute('fill', palette[Math.floor(Math.random()*palette.length)]);
+      svg.appendChild(fruit); deco.push(fruit);
+    }
+  });
+  const len = path.getTotalLength();
+  path.style.strokeDasharray = len;
+  path.style.strokeDashoffset = len;
+  return {path, deco, len};
+}
+
+/* =====================================================
+   SCENE 1 — hero entrance
+===================================================== */
+gsap.from('.hero-title .word', {y:90, opacity:0, rotateX:-60, stagger:.18, duration:1.4, ease:'power4.out', delay:.2});
+gsap.from('.kicker, .hero-sub', {opacity:0, y:30, duration:1.2, stagger:.3, delay:.9, ease:'power3.out'});
+gsap.to('#hero .hero-content', {
+  scrollTrigger:{trigger:'#hero', start:'top top', end:'bottom top', scrub:true},
+  y:-160, opacity:0, scale:.92, ease:'none'
+});
+gsap.to('.hero-canopy', {
+  scrollTrigger:{trigger:'#hero', start:'top top', end:'bottom top', scrub:true},
+  y:-120, ease:'none'
+});
+
+/* nectar progress bar + overall page progress (drives corner vines + particles) */
+let pageProgress = 0;
+ScrollTrigger.create({
+  trigger:document.body, start:'top top', end:'bottom bottom',
+  onUpdate(self){
+    pageProgress = self.progress;
+    gsap.set('#nectar',{scaleX:self.progress});
+  }
+});
+
+/* corner vines grow with total scroll */
+document.querySelectorAll('.corner-vine').forEach(svg=>{
+  const vines=[];
+  for(let i=0;i<3;i++){
+    vines.push(growVine(svg, rand(-10,30), rand(-10,40), rand(.2,1.2), rand(260,420),
+      {curl:.06, width:rand(3,6), stroke:'#2e7a40', leaf:'#3f9e52', leafScale:.8, fruitChance:.15}));
+  }
+  vines.forEach(v=>{
+    gsap.set(v.deco,{opacity:0});
+    ScrollTrigger.create({
+      trigger:document.body, start:'top top', end:'bottom bottom',
+      onUpdate(self){
+        const p = Math.min(1, self.progress*1.6);
+        gsap.set(v.path,{strokeDashoffset: v.len*(1-p)});
+        v.deco.forEach((el,i)=>{
+          const t = Math.max(0, Math.min(1, (p - i/v.deco.length)*4));
+          el.style.opacity = t;
+        });
+      }
+    });
+  });
+});
+
+/* =====================================================
+   SCENE 2 — THE POUR (pinned, scrubbed)
+===================================================== */
+const heroFlavor = FLAVORS[3]; // Jungle Gold
+document.getElementById('hero-bottle').innerHTML = bottleSVG(heroFlavor, 1, true);
+
+/* gushes: arcs erupting from the bottle mouth (svg coords: mouth ≈ 450,210 in 900x760) */
+const gushSVG = document.getElementById('gush-svg');
+const GUSH_DEFS = [
+  {d:'M450,225 C430,120 300,90 200,160 C140,205 130,290 170,350', w:26, c:'#ffd23f'},
+  {d:'M450,225 C475,110 620,80 710,165 C765,220 760,310 705,365', w:30, c:'#ffac33'},
+  {d:'M450,225 C440,150 360,140 320,70 C295,28 310,5 340,-10',     w:18, c:'#ff7a18'},
+  {d:'M450,225 C465,160 560,150 600,75 C625,30 615,0 590,-15',     w:16, c:'#e92f8c'},
+  {d:'M450,225 C450,170 500,300 545,420 C570,485 555,540 510,580', w:22, c:'#b8f53d'},
+];
+const gushes = GUSH_DEFS.map(g=>{
+  const p=document.createElementNS(SVGNS,'path');
+  p.setAttribute('d',g.d); p.setAttribute('fill','none');
+  p.setAttribute('stroke',g.c); p.setAttribute('stroke-width',g.w);
+  p.setAttribute('stroke-linecap','round'); p.setAttribute('opacity','.95');
+  gushSVG.appendChild(p);
+  const len=p.getTotalLength();
+  p.style.strokeDasharray=len; p.style.strokeDashoffset=len;
+  // splash blob at the end of each arc
+  const end=p.getPointAtLength(len);
+  const blob=document.createElementNS(SVGNS,'circle');
+  blob.setAttribute('cx',end.x); blob.setAttribute('cy',end.y);
+  blob.setAttribute('r',g.w*1.4); blob.setAttribute('fill',g.c);
+  gushSVG.appendChild(blob);
+  gsap.set(blob,{scale:0, transformOrigin:`${end.x}px ${end.y}px`});
+  return {p,len,blob};
+});
+
+/* floating fruit that orbits in during the gush */
+const POUR_FRUIT=[
+  {emoji:'🍍',x:160,y:430},{emoji:'🥭',x:740,y:420},{emoji:'🍊',x:230,y:120},
+  {emoji:'🫚',x:690,y:110},{emoji:'🍓',x:120,y:260},{emoji:'🥝',x:790,y:270},
+];
+const fruitEls = POUR_FRUIT.map(f=>{
+  const t=document.createElementNS(SVGNS,'text');
+  t.textContent=f.emoji;
+  t.setAttribute('x',f.x); t.setAttribute('y',f.y);
+  t.setAttribute('font-size','46'); t.setAttribute('text-anchor','middle');
+  gushSVG.appendChild(t);
+  gsap.set(t,{opacity:0, scale:.3, transformOrigin:`${f.x}px ${f.y}px`});
+  return t;
+});
+
+const pourTitleEl = document.getElementById('pour-title');
+pourTitleEl.innerHTML = pourTitleEl.textContent.split('').map(c=>
+  c===' ' ? ' ' : `<span class="ch">${c}</span>`).join('');
+gsap.set('#pour-title .ch',{opacity:0, y:60, rotateZ:()=>rand(-30,30)});
+gsap.set('#pour-sub',{opacity:0});
+
+let pourState = {emit:0, mouthEl:null}; // particle hook for canvas
+
+const pourTL = gsap.timeline({
+  scrollTrigger:{
+    trigger:'#pour', start:'top top', end:'+=3600', scrub:1, pin:true,
+    onToggle(self){ document.body.classList.toggle('cinema', self.isActive); },
+    onUpdate(self){
+      // canvas droplets fire while the gush is live
+      pourState.emit = (self.progress > .42 && self.progress < .88) ? 1 : 0;
+    }
+  }
+});
+pourTL
+  // bottle rises & spins like it's possessed
+  .fromTo('#hero-bottle',{y:260, scale:.6, rotateY:0},{y:0, scale:1, duration:.18, ease:'power2.out'},0)
+  .to('#hero-bottle',{rotateY:1440, duration:.42, ease:'power1.inOut'},.05)
+  .to('.pour-bg',{opacity:1, duration:.3},.2)
+  // cap unscrews…
+  .to('#hero-cap',{rotation:540, y:-46, svgOrigin:'100 73', duration:.12, ease:'power2.in'},.36)
+  // …then swirls away into the canopy
+  .to('#hero-cap',{x:260, y:-420, rotation:2200, opacity:0, duration:.22, ease:'power2.out'},.48)
+  // juice erupts: arcs draw out + blobs pop
+  .to(gushes.map(g=>g.p),{strokeDashoffset:0, duration:.26, stagger:.04, ease:'power2.out'},.50)
+  .to(gushes.map(g=>g.blob),{scale:1, duration:.18, stagger:.04, ease:'back.out(3)'},.60)
+  // bottle drains as it pours
+  .to('#liquid-level',{y:230, duration:.34, ease:'none'},.50)
+  // fruit swirls in around the chaos
+  .to(fruitEls,{opacity:1, scale:1, duration:.2, stagger:.03, ease:'back.out(2.5)'},.55)
+  .to(fruitEls,{y:'-=30', rotation:()=>rand(-40,40), duration:.3, stagger:.03, ease:'sine.inOut'},.7)
+  // headline crashes in letter by letter
+  .to('#pour-title .ch',{opacity:1, y:0, rotateZ:0, duration:.22, stagger:.012, ease:'back.out(2)'},.66)
+  .to('#pour-sub',{opacity:1, duration:.15},.84)
+  // settle: bottle bows out
+  .to('#hero-bottle',{scale:.85, y:40, opacity:.0, duration:.12, ease:'power2.in'},.9)
+  .to(gushSVG,{opacity:0, duration:.1},.92);
+
+/* track bottle-mouth screen position for canvas droplets */
+pourState.mouthEl = document.getElementById('hero-bottle');
+
+/* =====================================================
+   SCENE 3 — FLAVOR WORLDS (horizontal scroll)
+===================================================== */
+const track = document.getElementById('flavor-track');
+const splashBlob = (c1,c2)=>`
+  <svg class="splash" viewBox="0 0 200 200" preserveAspectRatio="none">
+    <defs><radialGradient id="sb-${c1.slice(1)}" cx=".5" cy=".45" r=".6">
+      <stop offset="0" stop-color="${c1}" stop-opacity=".85"/>
+      <stop offset="1" stop-color="${c2}" stop-opacity="0"/>
+    </radialGradient></defs>
+    <path fill="url(#sb-${c1.slice(1)})" d="M100,8 C140,14 178,40 186,84 C194,128 168,170 124,186
+      C80,202 34,180 16,140 C-2,100 10,52 44,28 C64,14 82,5 100,8 Z"/>
+  </svg>`;
+
+FLAVORS.forEach(f=>{
+  const card=document.createElement('div');
+  card.className='flavor-card'; card.dataset.flavor=f.id;
+  card.innerHTML = `
+    ${splashBlob(f.juice,f.juiceDark)}
+    <svg class="card-vine" viewBox="0 0 470 620" preserveAspectRatio="none"></svg>
+    <div class="bottle-wrap">${bottleSVG(f)}</div>
+    <div class="meta">
+      <h3 style="color:${f.juice}">${f.name}</h3>
+      <div class="ing">${f.ing}</div>
+      <div class="note">${f.note}</div>
+    </div>`;
+  track.appendChild(card);
+});
+
+const horiz = gsap.to(track, {
+  x:()=>-(track.scrollWidth - window.innerWidth),
+  ease:'none',
+  scrollTrigger:{
+    trigger:'#flavors', start:'top top', pin:true, scrub:1,
+    end:()=> '+=' + (track.scrollWidth - window.innerWidth + 600),
+    invalidateOnRefresh:true,
+    onToggle(self){ document.body.classList.toggle('cinema', self.isActive); }
+  }
+});
+
+document.querySelectorAll('.flavor-card').forEach(card=>{
+  // bottles spin forever, each at its own pace
+  gsap.to(card.querySelector('.bottle-wrap svg'),
+    {rotateY:360, duration:rand(5,9), repeat:-1, ease:'none'});
+  // splash breathes
+  gsap.to(card.querySelector('.splash'),
+    {scale:1.12, rotation:8, duration:rand(3,5), yoyo:true, repeat:-1, ease:'sine.inOut', transformOrigin:'center'});
+  // vines crawl over the card as it scrolls into view
+  const vsvg = card.querySelector('.card-vine');
+  const cardVines = [
+    growVine(vsvg, -10, rand(80,200), rand(-.4,.4), rand(280,380), {curl:.05, width:4, stroke:'#3f8f4f', leafScale:.75}),
+    growVine(vsvg, rand(120,320), 640, rand(-2.2,-1.4), rand(260,360), {curl:-.05, width:4, stroke:'#357a43', leafScale:.7}),
+    growVine(vsvg, 480, rand(380,520), rand(2.6,3.4), rand(240,320), {curl:.07, width:3, stroke:'#46a058', leafScale:.65}),
+  ];
+  cardVines.forEach(v=> gsap.set(v.deco,{opacity:0}));
+  ScrollTrigger.create({
+    trigger:card, containerAnimation:horiz, start:'left 85%', end:'center center', scrub:true,
+    onUpdate(self){
+      cardVines.forEach((v,vi)=>{
+        const p=Math.min(1, Math.max(0, self.progress*1.3 - vi*.1));
+        gsap.set(v.path,{strokeDashoffset:v.len*(1-p)});
+        v.deco.forEach((el,i)=>{
+          el.style.opacity = Math.max(0, Math.min(1,(p - i/v.deco.length)*3));
+        });
+      });
+    }
+  });
+  // card parallax pop
+  gsap.from(card, {
+    scale:.85, opacity:.4, ease:'none',
+    scrollTrigger:{trigger:card, containerAnimation:horiz, start:'left right', end:'left 55%', scrub:true}
+  });
+});
+
+/* =====================================================
+   SCENE 4 — OVERGROWTH (pinned vine takeover)
+===================================================== */
+const ogSVG = document.getElementById('overgrowth-svg');
+function buildOvergrowth(){
+  ogSVG.innerHTML='';
+  const W=window.innerWidth, H=window.innerHeight;
+  ogSVG.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  const vines=[];
+  const starts=[
+    [0,H*.85,-.4],[0,H*.45,.1],[W,H*.75,Math.PI+.3],[W,H*.3,Math.PI-.2],
+    [W*.25,H+10,-1.7],[W*.6,H+10,-1.4],[W*.85,H+10,-1.9],[W*.45,-10,1.6],
+  ];
+  starts.forEach(([x,y,a])=>{
+    vines.push(growVine(ogSVG,x,y,a, rand(W*.35,W*.55),
+      {seg:12, curl:rand(-.05,.05), width:rand(5,9), stroke:'#2e7a40', leaf:'#4caf50',
+       leafScale:1.15, fruitChance:.3}));
+  });
+  vines.forEach(v=> gsap.set(v.deco,{opacity:0, scale:.4, transformOrigin:'center'}));
+  return vines;
+}
+let ogVines = buildOvergrowth();
+
+gsap.set('#overgrowth .word',{opacity:0, y:80});
+gsap.set('#overgrowth p, #overgrowth .kicker',{opacity:0});
+
+const ogTL = gsap.timeline({
+  scrollTrigger:{
+    trigger:'#overgrowth', start:'top top', end:'+=2600', scrub:1, pin:true,
+    invalidateOnRefresh:true,
+    onToggle(self){ document.body.classList.toggle('cinema', self.isActive); },
+    onUpdate(self){
+      const p=self.progress;
+      ogVines.forEach((v,vi)=>{
+        const vp=Math.min(1, Math.max(0, p*1.5 - vi*.06));
+        gsap.set(v.path,{strokeDashoffset:v.len*(1-vp)});
+        if(vp>0 && !v.bloomed){ v.bloomed=true; gsap.to(v.deco,{scale:1, duration:.6, ease:'back.out(2)'}); }
+        v.deco.forEach((el,i)=>{
+          el.style.opacity=Math.max(0,Math.min(1,(vp - i/v.deco.length)*3));
+        });
+      });
+    }
+  }
+});
+ogTL
+  .to('#overgrowth .kicker',{opacity:1, duration:.1},.45)
+  .to('#overgrowth .word',{opacity:1, y:0, stagger:.08, duration:.25, ease:'back.out(1.8)'},.5)
+  .to('#overgrowth p',{opacity:1, duration:.2},.8);
+
+/* =====================================================
+   SCENE 5 — FINALE
+===================================================== */
+/* splash crown */
+const crown=document.getElementById('crown-svg');
+const crownPaths=[];
+for(let i=0;i<14;i++){
+  const x=70+i*42, h=rand(70,210), lean=rand(-26,26);
+  const p=document.createElementNS(SVGNS,'path');
+  p.setAttribute('d',`M${x},250 C${x-6},${250-h*.5} ${x+lean},${250-h*.85} ${x+lean},${250-h}`);
+  p.setAttribute('stroke',FLAVORS[i%4].juice);
+  p.setAttribute('stroke-width',rand(8,16));
+  p.setAttribute('stroke-linecap','round'); p.setAttribute('fill','none');
+  crown.appendChild(p);
+  const tip=document.createElementNS(SVGNS,'circle');
+  tip.setAttribute('cx',x+lean); tip.setAttribute('cy',250-h-10);
+  tip.setAttribute('r',rand(5,12)); tip.setAttribute('fill',FLAVORS[i%4].juice);
+  crown.appendChild(tip);
+  crownPaths.push({p,tip});
+}
+crownPaths.forEach(({p,tip})=>{
+  const len=p.getTotalLength();
+  p.style.strokeDasharray=len; p.style.strokeDashoffset=len;
+  gsap.set(tip,{scale:0, transformOrigin:`${tip.getAttribute('cx')}px ${tip.getAttribute('cy')}px`});
+});
+
+/* bottle line-up */
+const lineup=document.getElementById('lineup');
+FLAVORS.forEach(f=>{
+  const d=document.createElement('div');
+  d.className='li-bottle'; d.innerHTML=bottleSVG(f);
+  lineup.appendChild(d);
+  gsap.to(d.querySelector('svg'),{rotateY:360, duration:rand(6,10), repeat:-1, ease:'none'});
+});
+
+const finTL=gsap.timeline({
+  scrollTrigger:{trigger:'#finale', start:'top 70%', end:'top 10%', scrub:1}
+});
+finTL
+  .to(crownPaths.map(c=>c.p),{strokeDashoffset:0, stagger:.04, duration:.6, ease:'power2.out'},0)
+  .to(crownPaths.map(c=>c.tip),{scale:1, stagger:.04, duration:.3, ease:'back.out(3)'},.3)
+  .from('.lineup .li-bottle',{y:120, opacity:0, stagger:.08, duration:.5, ease:'back.out(1.6)'},.2)
+  .from('#finale h2',{opacity:0, scale:.7, duration:.4, ease:'back.out(2)'},.5)
+  .from('.cta, footer',{opacity:0, y:40, stagger:.1, duration:.4},.7);
+
+/* =====================================================
+   CANVAS FX — fireflies, juice droplets, falling leaves
+===================================================== */
+const cv=document.getElementById('fx-canvas');
+const ctx=cv.getContext('2d');
+let CW,CH;
+function sizeCanvas(){ CW=cv.width=innerWidth; CH=cv.height=innerHeight; }
+sizeCanvas();
+
+const flies=[], drops=[], leaves=[];
+for(let i=0;i<40;i++) flies.push({
+  x:Math.random()*innerWidth, y:Math.random()*innerHeight,
+  r:rand(1,2.6), t:rand(0,Math.PI*2), sp:rand(.0008,.003), amp:rand(20,70)
+});
+const LEAF_COLORS=['#4caf50','#7ddb3c','#ffac33','#e92f8c'];
+
+function spawnDrop(x,y){
+  drops.push({x, y, vx:rand(-4.5,4.5), vy:rand(-7,-2), r:rand(2,6),
+    c:['#ffd23f','#ffac33','#ff7a18','#b8f53d'][Math.floor(rand(0,4))], life:1});
+}
+function spawnLeaf(){
+  leaves.push({x:rand(0,CW), y:-20, vx:rand(-.6,.6), vy:rand(.7,1.8),
+    rot:rand(0,Math.PI*2), vr:rand(-.04,.04), s:rand(6,14),
+    c:LEAF_COLORS[Math.floor(rand(0,4))], life:1});
+}
+
+function fxLoop(time){
+  ctx.clearRect(0,0,CW,CH);
+
+  // fireflies — denser as you go deeper into the jungle
+  const flyCount = Math.floor(12 + pageProgress*28);
+  for(let i=0;i<flyCount && i<flies.length;i++){
+    const f=flies[i];
+    f.t+=f.sp*16;
+    const x=f.x+Math.cos(f.t)*f.amp, y=f.y+Math.sin(f.t*1.3)*f.amp*.6;
+    const glow=.35+.65*Math.abs(Math.sin(f.t*2));
+    ctx.beginPath();
+    ctx.fillStyle=`rgba(214,255,140,${.55*glow})`;
+    ctx.shadowColor='#d6ff8c'; ctx.shadowBlur=12*glow;
+    ctx.arc(x,y,f.r,0,Math.PI*2); ctx.fill();
+    ctx.shadowBlur=0;
+  }
+
+  // juice droplets while the pour scene is gushing
+  if(pourState.emit && pourState.mouthEl){
+    const r=pourState.mouthEl.getBoundingClientRect();
+    const mx=r.left+r.width/2, my=r.top+r.height*.12;
+    for(let i=0;i<3;i++) spawnDrop(mx,my);
+  }
+  for(let i=drops.length-1;i>=0;i--){
+    const d=drops[i];
+    d.vy+=.28; d.x+=d.vx; d.y+=d.vy; d.life-=.012;
+    if(d.life<=0||d.y>CH+20){ drops.splice(i,1); continue; }
+    ctx.globalAlpha=Math.max(0,d.life);
+    ctx.fillStyle=d.c;
+    ctx.beginPath(); ctx.ellipse(d.x,d.y,d.r*.8,d.r*1.2,Math.atan2(d.vy,d.vx)+Math.PI/2,0,Math.PI*2); ctx.fill();
+    ctx.globalAlpha=1;
+  }
+
+  // leaves drift down in the back half of the journey
+  if(pageProgress>.55 && Math.random()<.10 && leaves.length<36) spawnLeaf();
+  for(let i=leaves.length-1;i>=0;i--){
+    const l=leaves[i];
+    l.x+=l.vx+Math.sin(time*.001+l.rot)*0.5; l.y+=l.vy; l.rot+=l.vr;
+    if(l.y>CH+30){ leaves.splice(i,1); continue; }
+    ctx.save(); ctx.translate(l.x,l.y); ctx.rotate(l.rot);
+    ctx.fillStyle=l.c; ctx.globalAlpha=.85;
+    ctx.beginPath();
+    ctx.moveTo(0,0); ctx.quadraticCurveTo(l.s*.6,-l.s*.5,l.s,0); ctx.quadraticCurveTo(l.s*.6,l.s*.5,0,0);
+    ctx.fill(); ctx.restore(); ctx.globalAlpha=1;
+  }
+  requestAnimationFrame(fxLoop);
+}
+if(!REDUCED) requestAnimationFrame(fxLoop);
+
+/* =====================================================
+   resize handling
+===================================================== */
+let resizeTimer;
+window.addEventListener('resize',()=>{
+  sizeCanvas();
+  clearTimeout(resizeTimer);
+  resizeTimer=setTimeout(()=>{
+    ogVines = buildOvergrowth();
+    ScrollTrigger.refresh();
+  },300);
+});
+</script>
+</body>
+</html>
