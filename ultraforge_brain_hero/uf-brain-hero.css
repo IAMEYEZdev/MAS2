@@ -1,0 +1,184 @@
+:root {
+  /* ── UF brand knobs ─────────────────────────────────────────── */
+  --uf-green: #19f06e;
+  --uf-green-dim: #0c7a3a;
+  --uf-bg: #000000;
+  --uf-text: #e8fff0;
+  --uf-font: "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+.uf-hero {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  background: var(--uf-bg);
+  font-family: var(--uf-font);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* ── Layer 0: matrix code rain across the whole hero ─────────── */
+.uf-hero__rain {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.35;
+}
+
+/* ── Layer 1: breathing glow behind the brain ────────────────── */
+.uf-hero__glow {
+  position: absolute;
+  top: 38%;
+  left: 50%;
+  width: 70vmin;
+  height: 70vmin;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle,
+    rgba(25, 240, 110, 0.20) 0%,
+    rgba(25, 240, 110, 0.07) 45%,
+    transparent 70%);
+  animation: uf-breathe 5s ease-in-out infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+@keyframes uf-breathe {
+  0%, 100% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
+  50%      { opacity: 1;   transform: translate(-50%, -50%) scale(1.07); }
+}
+
+/* ── Layer 2: the Higgsfield UF brain ────────────────────────── */
+.uf-hero__media {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 78vh;
+  aspect-ratio: 16 / 9;
+  max-width: none;
+  z-index: 2;
+  /* edges dissolve into the black hero at any viewport width */
+  -webkit-mask-image: radial-gradient(ellipse 62% 58% at 50% 46%,
+    #000 55%, transparent 82%);
+          mask-image: radial-gradient(ellipse 62% 58% at 50% 46%,
+    #000 55%, transparent 82%);
+  animation: uf-float 9s ease-in-out infinite;
+}
+/* micro-motion: the brain slowly drifts and swells, never still */
+@keyframes uf-float {
+  0%, 100% { transform: translateX(-50%) scale(1)     translateY(0); }
+  50%      { transform: translateX(-50%) scale(1.025) translateY(-0.6vh); }
+}
+.uf-hero__media img,
+.uf-hero__media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* energy shimmer sweeping along the circuit traces */
+.uf-hero__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg,
+    transparent 0%,
+    transparent 38%,
+    rgba(120, 255, 180, 0.16) 47%,
+    rgba(220, 255, 235, 0.28) 50%,
+    rgba(120, 255, 180, 0.16) 53%,
+    transparent 62%,
+    transparent 100%);
+  background-size: 280% 280%;
+  mix-blend-mode: screen;
+  animation: uf-shimmer 6.5s linear infinite;
+  pointer-events: none;
+}
+@keyframes uf-shimmer {
+  0%   { background-position: 120% 120%; }
+  100% { background-position: -60% -60%; }
+}
+
+/* ── Layer 3: foreground spark particles ─────────────────────── */
+.uf-hero__sparks {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* ── Layer 4: copy block ─────────────────────────────────────── */
+.uf-hero__copy {
+  position: relative;
+  z-index: 4;
+  text-align: center;
+  padding: 0 24px 9vh;
+  max-width: 880px;
+}
+.uf-hero__eyebrow {
+  color: var(--uf-green);
+  letter-spacing: 0.55em;
+  text-transform: uppercase;
+  font-size: clamp(11px, 1.2vw, 14px);
+  margin-bottom: 18px;
+  text-shadow: 0 0 12px rgba(25, 240, 110, 0.8);
+}
+.uf-hero__title {
+  color: var(--uf-text);
+  font-size: clamp(40px, 7vw, 84px);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1.02;
+}
+.uf-hero__title .uf {
+  color: var(--uf-green);
+  text-shadow: 0 0 24px rgba(25, 240, 110, 0.9);
+  animation: uf-letter-pulse 5s ease-in-out infinite;
+}
+@keyframes uf-letter-pulse {
+  0%, 100% { text-shadow: 0 0 24px rgba(25, 240, 110, 0.9); }
+  50%      { text-shadow: 0 0 42px rgba(25, 240, 110, 1), 0 0 80px rgba(25, 240, 110, 0.5); }
+}
+.uf-hero__sub {
+  color: #9fd4b4;
+  font-size: clamp(15px, 1.6vw, 19px);
+  margin-top: 18px;
+  line-height: 1.6;
+}
+.uf-hero__cta {
+  margin-top: 34px;
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.uf-btn {
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  padding: 14px 34px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.uf-btn--primary {
+  background: var(--uf-green);
+  color: #021509;
+  border: none;
+  box-shadow: 0 0 28px rgba(25, 240, 110, 0.45);
+}
+.uf-btn--ghost {
+  background: transparent;
+  color: var(--uf-green);
+  border: 1px solid var(--uf-green-dim);
+}
+.uf-btn:hover { transform: translateY(-2px); box-shadow: 0 0 38px rgba(25, 240, 110, 0.6); }
+
+@media (prefers-reduced-motion: reduce) {
+  .uf-hero__glow,
+  .uf-hero__media,
+  .uf-hero__media::after,
+  .uf-hero__title .uf { animation: none; }
+}

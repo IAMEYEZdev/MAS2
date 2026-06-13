@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UltraForge — Agentic AI</title>
+<style>
+  :root {
+    /* ── UF brand knobs ─────────────────────────────────────────── */
+    --uf-green: #19f06e;
+    --uf-green-dim: #0c7a3a;
+    --uf-bg: #000000;
+    --uf-text: #e8fff0;
+    --uf-font: "Segoe UI", system-ui, -apple-system, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: var(--uf-bg); }
+
+  .uf-hero {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+    background: var(--uf-bg);
+    font-family: var(--uf-font);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  /* ── Layer 0: matrix code rain across the whole hero ─────────── */
+  .uf-hero__rain {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.35;
+  }
+
+  /* ── Layer 1: breathing glow behind the brain ────────────────── */
+  .uf-hero__glow {
+    position: absolute;
+    top: 38%;
+    left: 50%;
+    width: 70vmin;
+    height: 70vmin;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle,
+      rgba(25, 240, 110, 0.20) 0%,
+      rgba(25, 240, 110, 0.07) 45%,
+      transparent 70%);
+    animation: uf-breathe 5s ease-in-out infinite;
+    z-index: 1;
+    pointer-events: none;
+  }
+  @keyframes uf-breathe {
+    0%, 100% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
+    50%      { opacity: 1;   transform: translate(-50%, -50%) scale(1.07); }
+  }
+
+  /* ── Layer 2: the Higgsfield UF brain ────────────────────────── */
+  .uf-hero__media {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    height: 78vh;
+    aspect-ratio: 16 / 9;
+    max-width: none;
+    z-index: 2;
+    /* edges dissolve into the black hero at any viewport width */
+    -webkit-mask-image: radial-gradient(ellipse 62% 58% at 50% 46%,
+      #000 55%, transparent 82%);
+            mask-image: radial-gradient(ellipse 62% 58% at 50% 46%,
+      #000 55%, transparent 82%);
+    animation: uf-float 9s ease-in-out infinite;
+  }
+  /* micro-motion: the brain slowly drifts and swells, never still */
+  @keyframes uf-float {
+    0%, 100% { transform: translateX(-50%) scale(1)     translateY(0); }
+    50%      { transform: translateX(-50%) scale(1.025) translateY(-0.6vh); }
+  }
+  .uf-hero__media img,
+  .uf-hero__media video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* energy shimmer sweeping along the circuit traces */
+  .uf-hero__media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(115deg,
+      transparent 0%,
+      transparent 38%,
+      rgba(120, 255, 180, 0.16) 47%,
+      rgba(220, 255, 235, 0.28) 50%,
+      rgba(120, 255, 180, 0.16) 53%,
+      transparent 62%,
+      transparent 100%);
+    background-size: 280% 280%;
+    mix-blend-mode: screen;
+    animation: uf-shimmer 6.5s linear infinite;
+    pointer-events: none;
+  }
+  @keyframes uf-shimmer {
+    0%   { background-position: 120% 120%; }
+    100% { background-position: -60% -60%; }
+  }
+
+  /* ── Layer 3: foreground spark particles ─────────────────────── */
+  .uf-hero__sparks {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  /* ── Layer 4: copy block ─────────────────────────────────────── */
+  .uf-hero__copy {
+    position: relative;
+    z-index: 4;
+    text-align: center;
+    padding: 0 24px 9vh;
+    max-width: 880px;
+  }
+  .uf-hero__eyebrow {
+    color: var(--uf-green);
+    letter-spacing: 0.55em;
+    text-transform: uppercase;
+    font-size: clamp(11px, 1.2vw, 14px);
+    margin-bottom: 18px;
+    text-shadow: 0 0 12px rgba(25, 240, 110, 0.8);
+  }
+  .uf-hero__title {
+    color: var(--uf-text);
+    font-size: clamp(40px, 7vw, 84px);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    line-height: 1.02;
+  }
+  .uf-hero__title .uf {
+    color: var(--uf-green);
+    text-shadow: 0 0 24px rgba(25, 240, 110, 0.9);
+    animation: uf-letter-pulse 5s ease-in-out infinite;
+  }
+  @keyframes uf-letter-pulse {
+    0%, 100% { text-shadow: 0 0 24px rgba(25, 240, 110, 0.9); }
+    50%      { text-shadow: 0 0 42px rgba(25, 240, 110, 1), 0 0 80px rgba(25, 240, 110, 0.5); }
+  }
+  .uf-hero__sub {
+    color: #9fd4b4;
+    font-size: clamp(15px, 1.6vw, 19px);
+    margin-top: 18px;
+    line-height: 1.6;
+  }
+  .uf-hero__cta {
+    margin-top: 34px;
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .uf-btn {
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 14px 34px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .uf-btn--primary {
+    background: var(--uf-green);
+    color: #021509;
+    border: none;
+    box-shadow: 0 0 28px rgba(25, 240, 110, 0.45);
+  }
+  .uf-btn--ghost {
+    background: transparent;
+    color: var(--uf-green);
+    border: 1px solid var(--uf-green-dim);
+  }
+  .uf-btn:hover { transform: translateY(-2px); box-shadow: 0 0 38px rgba(25, 240, 110, 0.6); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .uf-hero__glow,
+    .uf-hero__media,
+    .uf-hero__media::after,
+    .uf-hero__title .uf { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<section class="uf-hero" id="uf-hero">
+  <canvas class="uf-hero__rain" id="uf-rain"></canvas>
+  <div class="uf-hero__glow"></div>
+
+  <div class="uf-hero__media" id="uf-media">
+    <!-- Higgsfield-generated UF brain (job 25fc4a87-36d3-497d-9f4f-ea6cf5fa812b).
+         The animation is layered in code: rain, glow, shimmer, sparks, micro-motion.
+
+         OPTIONAL VIDEO UPGRADE: once a Higgsfield video render is available
+         (requires basic plan or higher), replace the <img> below with:
+           <video autoplay muted loop playsinline preload="auto"
+                  poster="assets/uf-brain.png">
+             <source src="assets/uf-brain-loop.mp4" type="video/mp4" />
+           </video>
+         Every code-driven effect layers cleanly on top of the video too. -->
+    <img src="assets/uf-brain.png" alt="UltraForge agentic AI circuit brain with UF monogram" />
+  </div>
+
+  <canvas class="uf-hero__sparks" id="uf-sparks"></canvas>
+
+  <div class="uf-hero__copy">
+    <p class="uf-hero__eyebrow">Agentic AI</p>
+    <h1 class="uf-hero__title"><span class="uf">U</span>LTRA<span class="uf">F</span>ORGE</h1>
+    <p class="uf-hero__sub">The self-orchestrating intelligence layer. One brain, every workflow &mdash;
+       forged to build, deploy and scale autonomous agents.</p>
+    <div class="uf-hero__cta">
+      <button class="uf-btn uf-btn--primary">Enter the Forge</button>
+      <button class="uf-btn uf-btn--ghost">Watch it think</button>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const hero = document.getElementById("uf-hero");
+
+  /* ── Matrix code rain (background) ──────────────────────────── */
+  const rain = document.getElementById("uf-rain");
+  const rctx = rain.getContext("2d");
+  const GLYPHS = "01アイウエオカキクケコサシスセソタチツテト<>/{}[]=+*#";
+  const fontSize = 14;
+  let cols = [];
+
+  /* ── Spark particles (foreground) ───────────────────────────── */
+  const sparks = document.getElementById("uf-sparks");
+  const sctx = sparks.getContext("2d");
+  let particles = [];
+
+  function resize() {
+    rain.width = sparks.width = hero.clientWidth;
+    rain.height = sparks.height = hero.clientHeight;
+    cols = Array.from({ length: Math.floor(rain.width / fontSize) },
+                      () => Math.random() * -100);
+    particles = Array.from({ length: Math.max(24, rain.width / 40) }, newParticle);
+  }
+
+  function newParticle() {
+    return {
+      x: Math.random() * sparks.width,
+      y: Math.random() * sparks.height * 0.8,
+      r: 0.6 + Math.random() * 1.6,
+      vy: -(0.08 + Math.random() * 0.25),
+      vx: (Math.random() - 0.5) * 0.12,
+      life: Math.random()
+    };
+  }
+
+  function drawRain() {
+    rctx.fillStyle = "rgba(0, 0, 0, 0.08)";
+    rctx.fillRect(0, 0, rain.width, rain.height);
+    rctx.font = fontSize + "px monospace";
+    for (let i = 0; i < cols.length; i++) {
+      const ch = GLYPHS[(Math.random() * GLYPHS.length) | 0];
+      const y = cols[i] * fontSize;
+      rctx.fillStyle = Math.random() > 0.975 ? "#b6ffd9" : "#0fae53";
+      rctx.fillText(ch, i * fontSize, y);
+      cols[i] = y > rain.height && Math.random() > 0.985 ? 0 : cols[i] + 0.55;
+    }
+  }
+
+  function drawSparks() {
+    sctx.clearRect(0, 0, sparks.width, sparks.height);
+    for (const p of particles) {
+      p.x += p.vx; p.y += p.vy; p.life += 0.008;
+      if (p.life > 1 || p.y < -4) Object.assign(p, newParticle(), { y: sparks.height * (0.5 + Math.random() * 0.4) });
+      const a = Math.sin(p.life * Math.PI) * 0.85;
+      sctx.beginPath();
+      sctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      sctx.fillStyle = "rgba(140, 255, 190," + a.toFixed(3) + ")";
+      sctx.shadowColor = "#19f06e";
+      sctx.shadowBlur = 8;
+      sctx.fill();
+      sctx.shadowBlur = 0;
+    }
+  }
+
+  function tick() {
+    drawRain();
+    drawSparks();
+    requestAnimationFrame(tick);
+  }
+
+  resize();
+  window.addEventListener("resize", resize);
+  if (!reduced) tick();
+
+  /* ── Pointer parallax: the brain leans toward the cursor ────── */
+  if (!reduced && window.matchMedia("(pointer: fine)").matches) {
+    const media = document.getElementById("uf-media");
+    hero.addEventListener("mousemove", (e) => {
+      const dx = (e.clientX / hero.clientWidth - 0.5) * 14;
+      const dy = (e.clientY / hero.clientHeight - 0.5) * 8;
+      media.style.translate = dx + "px " + dy + "px";
+    });
+    hero.addEventListener("mouseleave", () => { media.style.translate = "0 0"; });
+  }
+})();
+</script>
+
+</body>
+</html>
